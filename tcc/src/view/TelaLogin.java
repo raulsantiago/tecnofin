@@ -15,13 +15,12 @@ import java.awt.Cursor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import model.Login;
-import control.LoginConexao;
+import model.LoginConexao;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.Frame;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 
 public class TelaLogin extends JFrame {
 	private JPasswordField txtSenha;
@@ -46,7 +45,6 @@ public class TelaLogin extends JFrame {
 	 * Create the frame.
 	 */
 	public TelaLogin() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaLogin.class.getResource("/javax/swing/plaf/metal/icons/ocean/homeFolder.gif")));
 		setSize(new Dimension(650, 500));
 		setPreferredSize(new Dimension(500, 500));
 		setFocusTraversalKeysEnabled(false);
@@ -83,12 +81,10 @@ public class TelaLogin extends JFrame {
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				Login.email = txtEmail.getText();
 				Login.senha = new String(txtSenha.getPassword());
 				LoginConexao vg = new LoginConexao();
 			    vg.verificarLogin();  //é o método de verificar o usuário
-			    
 			}
 		});
 		btnEntrar.setBounds(259, 279, 150, 30);
