@@ -1,0 +1,26 @@
+
+//Criando tabela sem chave primaria
+CREATE TABLE "pessoaJuridica" ( `cnpj` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `nomePJ` TEXT NOT NULL, `bancoNomePJ` TEXT NOT NULL, `bancoNumPJ` INTEGER NOT NULL, `agenciaPJ` TEXT NOT NULL, `tipoContaPJ` TEXT NOT NULL, `contaNumPJ` TEXT NOT NULL )
+
+//Criando tabela com chave primaria
+CREATE TABLE pessoaJuridica ( `cnpj` INTEGER NOT NULL, `nomePJ` TEXT NOT NULL, `bancoNomePJ` TEXT NOT NULL, `bancoNumPJ` INTEGER NOT NULL, `agenciaPJ` TEXT NOT NULL, `tipoContaPJ` TEXT NOT NULL, `contaNumPJ` TEXT NOT NULL, `FK_idCadastro` INTEGER NOT NULL, FOREIGN KEY(FK_idCadastro) REFERENCES cadastro(idCadastro) );
+
+
+CREATE TABLE pessoaFisica ( `cpf` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `nomePF` TEXT NOT NULL, `tipoPF` TEXT NOT NULL, `bancoNomePF` TEXT NOT NULL, `bancoNumPF` INTEGER NOT NULL, `agenciaPF` TEXT NOT NULL, `tipoContaPF` TEXT NOT NULL, `contaNumPF` TEXT NOT NULL, `FK_idCadastro` INTEGER, FOREIGN KEY(FK_idCadastro) REFERENCES cadastro(idCadastro) );
+
+
+CREATE TABLE bancos ( `idBancos` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `cnpj` INTEGER, `nome` TEXT NOT NULL, `numero` INTEGER NOT NULL, `agencia` TEXT NOT NULL, `tipoConta` TEXT NOT NULL, `contaNum`  TEXT NOT NULL, `gerente` TEXT, `saldo` NUMERIC NOT NULL, `FK_idCadastro` INTEGER, FOREIGN KEY(FK_idCadastro) REFERENCES cadastro(idCadastro) );
+
+
+CREATE TABLE transacao ( `idTransacao` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `tipo` TEXT NOT NULL, `dataTransacao` NUMERIC NOT NULL, `valor` NUMERIC NOT NULL, `descricao` TEXT, `FK_idReceita` INTEGER, FOREIGN KEY(FK_idReceita) REFERENCES receita(idReceita), `FK_idDespesa` INTEGER, FOREIGN KEY(FK_idDespesa) REFERENCES despesa(idDespesa), `FK_cnpj` INTEGER, FOREIGN KEY(FK_cnpj) REFERENCES pessoaJuridica(cnpj), `FK_cpf` INTEGER, FOREIGN KEY(FK_cpf) REFERENCES pessoaFisica(cpf), `FK_idBancos` INTEGER, FOREIGN KEY(FK_idBancos) REFERENCES bancos(idBancos) );
+
+
+CREATE TABLE transacao ( `idTransacao` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `tipo` TEXT NOT NULL, `dataTransacao` NUMERIC NOT NULL, `valor` NUMERIC NOT NULL,
+ `descricao` TEXT, `FK_idReceita` INTEGER, `FK_idDespesa` INTEGER, `FK_cnpj` INTEGER, `FK_cpf` INTEGER, `FK_idBancos` INTEGER,
+ FOREIGN KEY(FK_idReceita) REFERENCES receita(idReceita),
+ FOREIGN KEY(FK_idDespesa) REFERENCES despesa(idDespesa),
+ FOREIGN KEY(FK_cnpj) REFERENCES pessoaJuridica(cnpj),
+ FOREIGN KEY(FK_cpf) REFERENCES pessoaFisica(cpf),
+ FOREIGN KEY(FK_idBancos) REFERENCES bancos(idBancos) );
+
+

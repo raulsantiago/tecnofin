@@ -46,6 +46,7 @@ public class TelaLogin extends JFrame {
 	 * Create the frame.
 	 */
 	public TelaLogin() {
+		setTitle("TECNOFIN - Tecnologia em Sistema de Controle Finaneiro");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaLogin.class.getResource("/javax/swing/plaf/metal/icons/ocean/homeFolder.gif")));
 		setSize(new Dimension(650, 500));
 		setPreferredSize(new Dimension(500, 500));
