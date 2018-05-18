@@ -2,28 +2,33 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import control.FisicaControle;
-import model.PessoaFisica;
-import model.PessoaJuridica;
 
-import java.awt.Toolkit;
+import control.JuridicaControle;
+import control.ReceitaControle;
+import model.PessoaJuridica;
+import model.Receita;
+
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.JFormattedTextField;
 import javax.swing.JTextPane;
+import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public class TelaPF extends JFrame {
+public class AtualizarPJ extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textCidade;
@@ -36,14 +41,13 @@ public class TelaPF extends JFrame {
 	private JTextField textEmail;
 	private JTextField textTelefone;
 	private JTextField textCelular;
-	private JTextField textBancoNome;
+	private JTextField textNomeBanco;
 	private JTextField textBancoNum;
 	private JTextField textAgencia;
 	private JTextField textContaNum;
 	private JTextField textTipoConta;
-	private JTextField textNome;
-	private JTextField textCpf;
-	private JTextField textTipoPF;
+	private JTextField textRazao;
+	private JTextField textCnpj;
 
 	/**
 	 * Launch the application.
@@ -52,7 +56,7 @@ public class TelaPF extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaPF frame = new TelaPF();
+					AtualizarPJ frame = new AtualizarPJ();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -73,35 +77,54 @@ public class TelaPF extends JFrame {
 		textEmail.setText("");
 		textTelefone.setText("");
 		textCelular.setText("");
-		textBancoNome.setText("");
+		textNomeBanco.setText("");
 		textBancoNum.setText("");
 		textAgencia.setText("");
 		textContaNum.setText("");
 		textTipoConta.setText("");
-		textNome.setText("");
-		textCpf.setText("");
-		textTipoPF.setText("");
-		
+		textRazao.setText("");
+		textCnpj.setText("");
 	}
+	
 	
 
 	/**
 	 * Create the frame.
 	 */
-	public TelaPF() {
-		setForeground(Color.GRAY);
-		setFont(new Font("Tahoma", Font.BOLD, 12));
+	public AtualizarPJ() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+								
+				textCnpj.setText(String.valueOf(PessoaJuridica.cnpj));				
+				textNomeBanco.setText(PessoaJuridica.bancoNomePJ);				
+				textRazao.setText(PessoaJuridica.nomePJ);				
+				textBancoNum.setText(String.valueOf(PessoaJuridica.bancoNumPJ));			
+				textAgencia.setText(PessoaJuridica.agenciaPJ);				
+				textTipoConta.setText(PessoaJuridica.tipoContaPJ);				
+				textContaNum.setText(PessoaJuridica.contaNumPJ);				
+				textEmail.setText(PessoaJuridica.email);				
+				textTelefone.setText(PessoaJuridica.telefone);				
+				textCelular.setText(PessoaJuridica.celular);				
+				textEndereco.setText(PessoaJuridica.endereco);				
+				textNumero.setText(PessoaJuridica.numero);				
+				textComplemento.setText(PessoaJuridica.complemento);				
+				textUf.setText(PessoaJuridica.uf);				
+				textCidade.setText(PessoaJuridica.cidade);				
+ 				textBairro.setText(PessoaJuridica.bairro); 				
+ 				textCep.setText(PessoaJuridica.cep);
+ 								
+			}
+		});
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AtualizarPJ.class.getResource("/Imagem/money-icon-title.jpg")));
 		setMaximumSize(new Dimension(1000, 700));
 		setMinimumSize(new Dimension(1000, 700));
 		setPreferredSize(new Dimension(1000, 700));
 		setSize(new Dimension(1000, 700));
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaPF.class.getResource("/Imagem/money-icon-title.jpg")));
-		setTitle("Pessoa F\u00EDsica");
+		setTitle("Altera\u00E7\u00E3o e Detalhamento de Pessoa Juridica");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
-		contentPane.setForeground(Color.GRAY);
-		contentPane.setFont(new Font("Tahoma", Font.BOLD, 12));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -114,19 +137,19 @@ public class TelaPF extends JFrame {
 		panel.setBounds(0, 0, 984, 661);
 		contentPane.add(panel);
 		
-		JLabel lblPessoaFsica = new JLabel("PESSOA F\u00CDSICA");
-		lblPessoaFsica.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblPessoaFsica.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPessoaFsica.setForeground(Color.GRAY);
-		lblPessoaFsica.setFont(new Font("Tahoma", Font.BOLD, 30));
-		lblPessoaFsica.setBounds(342, 16, 299, 50);
-		panel.add(lblPessoaFsica);
+		JLabel label = new JLabel("PESSOA JUR\u00CDDICA");
+		label.setHorizontalTextPosition(SwingConstants.CENTER);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setForeground(Color.GRAY);
+		label.setFont(new Font("Tahoma", Font.BOLD, 30));
+		label.setBounds(342, 16, 299, 50);
+		panel.add(label);
 		
-		JLabel lblNome = new JLabel("NOME");
-		lblNome.setForeground(Color.GRAY);
-		lblNome.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNome.setBounds(60, 102, 115, 16);
-		panel.add(lblNome);
+		JLabel label_1 = new JLabel("RAZ\u00C3O SOCIAL");
+		label_1.setForeground(Color.GRAY);
+		label_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_1.setBounds(60, 102, 115, 16);
+		panel.add(label_1);
 		
 		JLabel label_2 = new JLabel("N\u00BA BANCO");
 		label_2.setForeground(Color.GRAY);
@@ -140,11 +163,11 @@ public class TelaPF extends JFrame {
 		label_3.setBounds(60, 173, 115, 16);
 		panel.add(label_3);
 		
-		JLabel lblCpf = new JLabel("CPF");
-		lblCpf.setForeground(Color.GRAY);
-		lblCpf.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblCpf.setBounds(732, 102, 115, 16);
-		panel.add(lblCpf);
+		JLabel label_4 = new JLabel("CNPJ");
+		label_4.setForeground(Color.GRAY);
+		label_4.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_4.setBounds(639, 102, 115, 16);
+		panel.add(label_4);
 		
 		JLabel label_5 = new JLabel("N\u00BA AG\u00CANCIA");
 		label_5.setForeground(Color.GRAY);
@@ -280,10 +303,10 @@ public class TelaPF extends JFrame {
 		textCelular.setBounds(711, 257, 212, 28);
 		panel.add(textCelular);
 		
-		textBancoNome = new JTextField();
-		textBancoNome.setColumns(10);
-		textBancoNome.setBounds(49, 189, 281, 28);
-		panel.add(textBancoNome);
+		textNomeBanco = new JTextField();
+		textNomeBanco.setColumns(10);
+		textNomeBanco.setBounds(49, 189, 281, 28);
+		panel.add(textNomeBanco);
 		
 		textBancoNum = new JTextField();
 		textBancoNum.setColumns(10);
@@ -305,116 +328,109 @@ public class TelaPF extends JFrame {
 		textTipoConta.setBounds(711, 189, 212, 28);
 		panel.add(textTipoConta);
 		
-		textNome = new JTextField();
-		textNome.setColumns(10);
-		textNome.setBounds(49, 117, 426, 28);
-		panel.add(textNome);
+		textRazao = new JTextField();
+		textRazao.setColumns(10);
+		textRazao.setBounds(49, 117, 554, 28);
+		panel.add(textRazao);
 		
-		textCpf = new JTextField();
-		textCpf.setColumns(10);
-		textCpf.setBounds(720, 117, 203, 28);
-		panel.add(textCpf);
+		textCnpj = new JTextField();
+		textCnpj.setColumns(10);
+		textCnpj.setBounds(631, 117, 292, 28);
+		panel.add(textCnpj);
 		
-		JButton btnSalvar = new JButton("SALVAR");
-		btnSalvar.addActionListener(new ActionListener() {
+		JButton btnAlterar = new JButton("ALTERAR");
+		btnAlterar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 
-				PessoaFisica.cidade = textCidade.getText();
-			    PessoaFisica.uf = textUf.getText();
-			    PessoaFisica.cep = textCep.getText();
-			    PessoaFisica.endereco = textEndereco.getText();
-			    PessoaFisica.numero = textNumero.getText();
-			    PessoaFisica.complemento = textComplemento.getText();
-			    PessoaFisica.bairro = textBairro.getText();
-			    PessoaFisica.email = textEmail.getText();
-			    PessoaFisica.telefone = textTelefone.getText();
-			    PessoaFisica.celular = textCelular.getText();
-			    PessoaFisica.bancoNomePF = textBancoNome.getText();
-			    PessoaFisica.bancoNumPF =  Integer.parseInt(String.valueOf(textBancoNum.getText()));
-			    PessoaFisica.agenciaPF = textAgencia.getText();
-			    PessoaFisica.contaNumPF = textContaNum.getText();
-			    PessoaFisica.tipoContaPF = textTipoConta.getText();
-			    PessoaFisica.nomePF = textNome.getText();
-			    PessoaFisica.tipoPF = textTipoPF.getText();
-			    PessoaFisica.cpf =  Long.parseLong(String.valueOf(textCpf.getText()));
-			    FisicaControle pj = new FisicaControle();		     
-			    pj.salvar();
-			    limparCampos();
-				
+				String j = String.valueOf(PessoaJuridica.cnpj);
+		        if(j.equals(""))
+		        {
+		            JOptionPane.showMessageDialog(null, "Não foi selecionada nenhuma linha da planilha para atualizar");
+		        }
+		        else
+		        {
+		        	
+		        	PessoaJuridica.cnpj = Long.parseLong(textCnpj.getText());
+		        	PessoaJuridica.bancoNumPJ = Integer.parseInt(textBancoNum.getText());
+		        	PessoaJuridica.bancoNomePJ = textNomeBanco.getText();
+		        	PessoaJuridica.nomePJ = textRazao.getText();
+		        	PessoaJuridica.agenciaPJ = textAgencia.getText();				
+		        	PessoaJuridica.tipoContaPJ = textTipoConta.getText();				
+		        	PessoaJuridica.contaNumPJ = textContaNum.getText();				
+		        	PessoaJuridica.email = textEmail.getText();				
+		        	PessoaJuridica.telefone = textTelefone.getText();				
+		        	PessoaJuridica.celular = textCelular.getText();				
+		        	PessoaJuridica.endereco = textEndereco.getText();				
+		        	PessoaJuridica.numero = textNumero.getText();				
+		        	PessoaJuridica.complemento = textComplemento.getText();				
+		        	PessoaJuridica.uf = textUf.getText();				
+		        	PessoaJuridica.cidade = textCidade.getText();				
+		        	PessoaJuridica.bairro = textBairro.getText(); 				
+		        	PessoaJuridica.cep = textCep.getText(); 
+				    
+				    JuridicaControle pj = new JuridicaControle();		     
+				    pj.Atualizar();				    
+				    limparCampos();
+		        }			    
 			}
 		});
-		btnSalvar.setForeground(Color.GRAY);
-		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnSalvar.setBounds(222, 554, 125, 28);
-		panel.add(btnSalvar);
+		btnAlterar.setForeground(Color.GRAY);
+		btnAlterar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnAlterar.setBounds(222, 554, 125, 28);
+		panel.add(btnAlterar);
 		
-		JButton btnConsulta = new JButton("CONSULTA");
-		btnConsulta.addActionListener(new ActionListener() {
+		JButton btnVoltar = new JButton("VOLTAR");
+		btnVoltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				TelaPF tpj = new TelaPF();
-                tpj.dispose();                
-				ShowPF spj = new ShowPF();
-				spj.setVisible(true);
-				
+				AtualizarPJ apj = new AtualizarPJ();
+                apj.dispose();                
+                ShowPJ spj = new ShowPJ();
+                spj.setVisible(true);
 			}
 		});
-		btnConsulta.setForeground(Color.GRAY);
-		btnConsulta.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnConsulta.setBounds(429, 554, 125, 28);
-		panel.add(btnConsulta);
-		
-		JButton btnLimpar = new JButton("LIMPAR");
-		btnLimpar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				limparCampos();
-			}
-		});
-		btnLimpar.setForeground(Color.GRAY);
-		btnLimpar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnLimpar.setBounds(639, 554, 125, 28);
-		panel.add(btnLimpar);
+		btnVoltar.setForeground(Color.GRAY);
+		btnVoltar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnVoltar.setBounds(639, 554, 125, 28);
+		panel.add(btnVoltar);
 		
 		JButton btnHome = new JButton("");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				TelaPF tpf = new TelaPF();
-                tpf.dispose();
+				AtualizarPJ apj = new AtualizarPJ();
+                apj.dispose();                
                 TelaPrincipal tp = new TelaPrincipal();
                 tp.setVisible(true);
 			}
 		});
-		btnHome.setIcon(new ImageIcon(TelaPF.class.getResource("/javax/swing/plaf/metal/icons/ocean/homeFolder.gif")));
+		btnHome.setIcon(new ImageIcon(AtualizarPJ.class.getResource("/javax/swing/plaf/metal/icons/ocean/homeFolder.gif")));
 		btnHome.setToolTipText("Click para voltar a tela principal do sistema TECNOFIN !");
 		btnHome.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnHome.setBounds(465, 605, 53, 36);
 		panel.add(btnHome);
 		
-		textTipoPF = new JTextField();
-		textTipoPF.setBounds(487, 117, 223, 28);
-		panel.add(textTipoPF);
-		textTipoPF.setColumns(10);
-		
-		JLabel lblTipoDePessoa = new JLabel("TIPO DE PESSOA");
-		lblTipoDePessoa.setForeground(Color.GRAY);
-		lblTipoDePessoa.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblTipoDePessoa.setBounds(502, 102, 115, 16);
-		panel.add(lblTipoDePessoa);
-		
 		JTextPane textNotas = new JTextPane();
-		textNotas.setBounds(49, 450, 874, 76);
-		btnSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			    PessoaFisica.notas = textNotas.getText();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {				
+ 				
+ 				textNotas.setText(PessoaJuridica.notas); 				
 			}
 		});
-		btnLimpar.addActionListener(new ActionListener() {
+		btnAlterar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textNotas.setText("");
+				
+		        PessoaJuridica.notas = textNotas.getText();
 			}
-		});
+		});		
+		textNotas.setBounds(49, 452, 874, 76);
 		panel.add(textNotas);
+		
+		JLabel lblDetalhamentoEAlterao = new JLabel("DETALHAMENTO E ALTERA\u00C7\u00C3O");
+		lblDetalhamentoEAlterao.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblDetalhamentoEAlterao.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDetalhamentoEAlterao.setForeground(Color.GRAY);
+		lblDetalhamentoEAlterao.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblDetalhamentoEAlterao.setBounds(342, 58, 299, 28);
+		panel.add(lblDetalhamentoEAlterao);
 	}
 }

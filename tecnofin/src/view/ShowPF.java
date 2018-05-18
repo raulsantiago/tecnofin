@@ -2,13 +2,19 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.Dimension;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -18,6 +24,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import conexoes.Conexao;
+import control.FisicaControle;
+import control.JuridicaControle;
+import model.PessoaFisica;
+import model.PessoaJuridica;
+
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 
 public class ShowPF extends JFrame {
 
@@ -41,11 +57,66 @@ public class ShowPF extends JFrame {
 			}
 		});
 	}
-
+	
+	public void limparCampos() 
+	{   	    		
+		textNome.setText("");
+		textCpf.setText("");
+	}
+	
+	
+	// "NOME", "CPF", "E-MAIL", "TELEFONE", "CELULAR", "DATA CADASTRO", "FK_IDCADASTRO"
+	public void preencherTabela(String sql)
+	{
+		Connection conn = null;        
+        conn = Conexao.getConexao(); //conectar ao banco de dados
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try
+        {
+            pstmt = conn.prepareStatement(sql);		            
+            rs = pstmt.executeQuery();            
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.setNumRows(0);//inicializar do primeiro elemento da tabela
+            
+            while(rs.next())
+            {
+                model.addRow(new Object[] 
+                {
+                    rs.getString("nomePF"),
+                    rs.getString("cpf"),
+                    rs.getString("email"),
+                    rs.getString("telefone"),
+                    rs.getString("celular"),
+                    rs.getString("dataCadastro"),
+                    rs.getString("FK_idCadastro"),
+                });
+            }		           
+        }
+        catch(SQLException ex)
+        {
+        	JOptionPane.showMessageDialog(null, "Erro ao exibir o banco de dados. Erro: " + ex);
+        }
+        finally
+        {
+        	Conexao.fecharConexao(conn, pstmt, rs);
+        }
+	}	
+	
 	/**
 	 * Create the frame.
 	 */
 	public ShowPF() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+				
+				String sql = "SELECT * FROM pessoaFisica, cadastro where FK_idCadastro = idCadastro ORDER BY nomePF ASC;";
+				preencherTabela(sql);
+				
+			}
+		});
 		setMaximumSize(new Dimension(1200, 700));
 		setMinimumSize(new Dimension(1200, 700));
 		setPreferredSize(new Dimension(1200, 700));
@@ -90,12 +161,36 @@ public class ShowPF extends JFrame {
 		contentPane.add(label_2);
 		
 		JButton btnBuscar = new JButton("BUSCAR");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				// Pesquisa pelo nome e CNPJ
+				String sql = "SELECT * FROM pessoaFisica, cadastro WHERE cpf LIKE ('%" 
+		                + textCpf.getText() 
+		                + "%') AND nomePF LIKE ('%"
+		                + textNome.getText()
+		                + "%') AND FK_idCadastro = idCadastro"
+		                + " ORDER BY nomePF ASC;";				
+				preencherTabela(sql);
+				limparCampos();
+				
+			}
+		});
 		btnBuscar.setForeground(Color.GRAY);
 		btnBuscar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnBuscar.setBounds(288, 168, 125, 28);
 		contentPane.add(btnBuscar);
 		
 		JButton btnHome = new JButton("");
+		btnHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				ShowPF spj = new ShowPF();
+                spj.dispose();                
+                TelaPrincipal tp = new TelaPrincipal();
+                tp.setVisible(true);
+			}
+		});
 		btnHome.setIcon(new ImageIcon(ShowPF.class.getResource("/javax/swing/plaf/metal/icons/ocean/homeFolder.gif")));
 		btnHome.setToolTipText("Click para voltar a tela principal do sistema TECNOFIN !");
 		btnHome.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -103,12 +198,31 @@ public class ShowPF extends JFrame {
 		contentPane.add(btnHome);
 		
 		JButton btnAlterar = new JButton("ALTERAR/DETALHAR");
+		btnAlterar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				ShowPF spj = new ShowPF();
+                spj.dispose();                
+                AtualizarPF apj = new AtualizarPF();
+                apj.setVisible(true);
+				
+			}
+		});
 		btnAlterar.setForeground(Color.GRAY);
 		btnAlterar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAlterar.setBounds(502, 168, 179, 28);
+		btnAlterar.setBounds(425, 168, 213, 28);
 		contentPane.add(btnAlterar);
 		
 		JButton btnVoltar = new JButton("VOLTAR");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				ShowPF spj = new ShowPF();
+                spj.dispose();                
+				TelaPF tpj = new TelaPF();
+				tpj.setVisible(true);
+			}
+		});
 		btnVoltar.setForeground(Color.GRAY);
 		btnVoltar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnVoltar.setBounds(818, 168, 125, 28);
@@ -119,6 +233,60 @@ public class ShowPF extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				int linha = table.getSelectedRow();//selecionar a linha da tabela e jogar na variável da Receita
+				PessoaFisica.cpf = Long.parseLong((table.getValueAt(linha, 1).toString()));
+				PessoaFisica.FK_idCadastro = Integer.parseInt((table.getValueAt(linha, 6).toString())); 
+				
+				Connection conn = null;        
+		        conn = Conexao.getConexao(); //conectar ao banco de dados
+		        PreparedStatement pstmt = null;
+		        ResultSet rs = null;
+				
+				String sql = "SELECT * FROM pessoaFisica, cadastro WHERE cpf LIKE ('" 
+		                + PessoaFisica.cpf
+		                + "') AND FK_idCadastro = idCadastro;";
+		                
+		         try
+		        {
+		            pstmt = conn.prepareStatement(sql);		            
+		            rs = pstmt.executeQuery();
+		            
+		            PessoaFisica.nomePF = rs.getString("nomePF");
+		            PessoaFisica.tipoPF = rs.getString("tipoPF");
+		            PessoaFisica.bancoNomePF = rs.getString("bancoNomePF");
+		            PessoaFisica.bancoNumPF = rs.getInt("bancoNumPF");
+		            PessoaFisica.agenciaPF = rs.getString("agenciaPF");
+		            PessoaFisica.tipoContaPF = rs.getString("tipoContaPF");
+    				PessoaFisica.contaNumPF = rs.getString("contaNumPF");
+    				PessoaFisica.email = rs.getString("email");
+		            PessoaFisica.telefone = rs.getString("telefone");
+		            PessoaFisica.celular = rs.getString("celular");
+    				PessoaFisica.endereco = rs.getString("endereco");
+    				PessoaFisica.numero = rs.getString("numero");
+    				PessoaFisica.complemento = rs.getString("complemento");
+    				PessoaFisica.uf = rs.getString("uf");
+    				PessoaFisica.cidade = rs.getString("cidade");
+    				PessoaFisica.bairro = rs.getString("bairro");
+    				PessoaFisica.cep = rs.getString("cep");
+    				PessoaFisica.notas = rs.getString("notas");
+    				Conexao.fecharConexao(conn, pstmt, rs);
+		             
+		        }
+		        catch(SQLException ex)
+		        {
+		        	JOptionPane.showMessageDialog(null, "Erro ao exibir o banco de dados. Erro: " + ex);
+		        }
+		        finally
+		        {
+		        	Conexao.fecharConexao(conn, pstmt, rs);
+		        }   
+			    
+			}
+		});
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null, null},
@@ -157,5 +325,29 @@ public class ShowPF extends JFrame {
 		table.getTableHeader().getColumnModel().getColumn(6).setMinWidth(0);
 		table.getTableHeader().getColumnModel().getColumn(6).setMaxWidth(0);
 		scrollPane.setViewportView(table);
+		
+		JButton btnExcluir = new JButton("EXCLUIR");
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String j = String.valueOf(PessoaFisica.cpf);
+		        if(j.equals(""))
+		        {
+		            JOptionPane.showMessageDialog(null, "Não foi selecionada nenhuma linha da planilha para deletar");
+		        }
+		        else
+		        {	
+		        	FisicaControle jc = new FisicaControle();
+				    jc.Deletar();				    
+				    String sql = "SELECT * FROM pessoaFisica, cadastro where FK_idCadastro = idCadastro ORDER BY nomePF ASC;";
+				    preencherTabela(sql);		        	
+		        }	
+				
+			}
+		});
+		btnExcluir.setForeground(Color.GRAY);
+		btnExcluir.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnExcluir.setBounds(650, 168, 125, 28);
+		contentPane.add(btnExcluir);
 	}
 }

@@ -2,10 +2,13 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import control.BancoControle;
+import model.Banco;
+import model.PessoaJuridica;
+
 import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -16,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class TelaBanco extends JFrame {
 
@@ -29,7 +34,7 @@ public class TelaBanco extends JFrame {
 	private JTextField textBairro;
 	private JTextField textEmail;
 	private JTextField textTelefone;
-	private JTextField textCelular;
+	private JTextField textCelular;	
 	private JTextField textNome;
 	private JTextField textBancoNum;
 	private JTextField textAgencia;
@@ -53,6 +58,31 @@ public class TelaBanco extends JFrame {
 			}
 		});
 	}
+	
+	
+	
+	public void limparCampos() 
+	{   
+	    textCidade.setText("");
+		textUf.setText("");
+		textCep.setText("");
+		textEndereco.setText("");
+		textNumero.setText("");
+		textComplemento.setText("");
+		textBairro.setText("");
+		textEmail.setText("");
+		textTelefone.setText("");
+		textCelular.setText("");		
+		textNome.setText("");
+		textBancoNum.setText("");
+		textAgencia.setText("");
+		textContaNum.setText("");
+		textTipoConta.setText("");
+		textGerente.setText("");
+		textCnpj.setText("");
+	}
+	
+	
 
 	/**
 	 * Create the frame.
@@ -270,24 +300,71 @@ public class TelaBanco extends JFrame {
 		panel.add(textCnpj);
 		
 		JButton btnSalvar = new JButton("SALVAR");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+
+				Banco.cidade = textCidade.getText();
+			    Banco.uf = textUf.getText();
+			    Banco.cep = textCep.getText();
+			    Banco.endereco = textEndereco.getText();
+			    Banco.numero = textNumero.getText();
+			    Banco.complemento = textComplemento.getText();
+			    Banco.bairro = textBairro.getText();
+			    Banco.email = textEmail.getText();
+			    Banco.telefone = textTelefone.getText();
+			    Banco.celular = textCelular.getText();			    
+			    Banco.gerente = textGerente.getText();
+			    Banco.bancoNum =  Integer.parseInt(String.valueOf(textBancoNum.getText()));
+			    Banco.agencia = textAgencia.getText();
+			    Banco.contaNum = textContaNum.getText();
+			    Banco.tipoConta = textTipoConta.getText();
+			    Banco.nome = textNome.getText();
+			    Banco.cnpj =  Long.parseLong(String.valueOf(textCnpj.getText()));			    
+			    BancoControle pj = new BancoControle();		     
+			    pj.salvar();
+			    limparCampos();
+				
+			}
+		});
 		btnSalvar.setForeground(Color.GRAY);
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnSalvar.setBounds(222, 554, 125, 28);
 		panel.add(btnSalvar);
 		
 		JButton btnConsulta = new JButton("CONSULTA");
+		btnConsulta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaBanco tpj = new TelaBanco();
+                tpj.dispose();                
+				ShowBanco spj = new ShowBanco();
+				spj.setVisible(true);
+			}
+		});
 		btnConsulta.setForeground(Color.GRAY);
 		btnConsulta.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnConsulta.setBounds(429, 554, 125, 28);
 		panel.add(btnConsulta);
 		
 		JButton btnLimpar = new JButton("LIMPAR");
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				limparCampos();
+			}
+		});
 		btnLimpar.setForeground(Color.GRAY);
 		btnLimpar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnLimpar.setBounds(639, 554, 125, 28);
 		panel.add(btnLimpar);
 		
 		JButton btnHome = new JButton("");
+		btnHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaBanco tc = new TelaBanco();
+                tc.dispose();
+                TelaPrincipal tp = new TelaPrincipal();
+                tp.setVisible(true);
+			}
+		});
 		btnHome.setIcon(new ImageIcon(TelaBanco.class.getResource("/javax/swing/plaf/metal/icons/ocean/homeFolder.gif")));
 		btnHome.setToolTipText("Click para voltar a tela principal do sistema TECNOFIN !");
 		btnHome.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -305,8 +382,18 @@ public class TelaBanco extends JFrame {
 		lblGerenteDoBanco.setBounds(64, 173, 153, 16);
 		panel.add(lblGerenteDoBanco);
 		
-		JTextPane textNotas = new JTextPane();
+		JTextPane textNotas = new JTextPane();		
 		textNotas.setBounds(49, 450, 874, 76);
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			    Banco.notas = textNotas.getText();
+			}
+		});
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textNotas.setText("");
+			}
+		});
 		panel.add(textNotas);
 	}
 

@@ -146,11 +146,11 @@ public class AtualizarTransacao extends JFrame {
 		textNotas.setBounds(82, 514, 502, 61);
 		contentPane.add(textNotas);
 		
-		JButton btnAlterar = new JButton("ALTERAR");
-		btnAlterar.setForeground(Color.GRAY);
-		btnAlterar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAlterar.setBounds(97, 590, 125, 28);
-		contentPane.add(btnAlterar);
+		JButton btnConfirmar = new JButton("CONFIRMAR");
+		btnConfirmar.setForeground(Color.GRAY);
+		btnConfirmar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnConfirmar.setBounds(97, 590, 125, 28);
+		contentPane.add(btnConfirmar);
 		
 		JButton btnVoltar = new JButton("VOLTAR");
 		btnVoltar.setForeground(Color.GRAY);

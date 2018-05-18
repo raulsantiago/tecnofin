@@ -152,19 +152,19 @@ public class ConsultaTransacao extends JFrame {
 		JButton btnBuscar = new JButton("BUSCAR");
 		btnBuscar.setForeground(Color.GRAY);
 		btnBuscar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnBuscar.setBounds(130, 297, 125, 28);
+		btnBuscar.setBounds(73, 291, 125, 28);
 		contentPane.add(btnBuscar);
 		
 		JButton btnVoltar = new JButton("VOLTAR");
 		btnVoltar.setForeground(Color.GRAY);
 		btnVoltar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnVoltar.setBounds(547, 297, 125, 28);
+		btnVoltar.setBounds(589, 291, 125, 28);
 		contentPane.add(btnVoltar);
 		
 		JButton btnAlterar = new JButton("ALTERAR");
 		btnAlterar.setForeground(Color.GRAY);
 		btnAlterar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAlterar.setBounds(329, 297, 125, 28);
+		btnAlterar.setBounds(237, 291, 125, 28);
 		contentPane.add(btnAlterar);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -196,6 +196,11 @@ public class ConsultaTransacao extends JFrame {
 		table.getColumnModel().getColumn(6).setPreferredWidth(120);
 		table.getColumnModel().getColumn(9).setPreferredWidth(90);
 		scrollPane.setViewportView(table);
+		
+		JButton btnExcluir = new JButton("EXCLUIR");
+		btnExcluir.setForeground(Color.GRAY);
+		btnExcluir.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnExcluir.setBounds(411, 291, 125, 28);
+		contentPane.add(btnExcluir);
 	}
-
 }

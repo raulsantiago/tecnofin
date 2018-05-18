@@ -10,8 +10,11 @@ import java.awt.SystemColor;
 import java.awt.Component;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import java.awt.Dimension;
 import javax.swing.JComboBox;
+import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
@@ -22,6 +25,7 @@ import javax.swing.ImageIcon;
 public class TelaPrincipal extends JFrame {
 
 	private JPanel contentPane;
+	
 
 	/**
 	 * Launch the application.
@@ -46,7 +50,7 @@ public class TelaPrincipal extends JFrame {
 		setTitle("TECNOFIN - Tecnologia em Sistema de Controle Finaneiro");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(TelaPrincipal.class.getResource("/Imagem/money-icon-title.jpg")));
 		setSize(new Dimension(650, 500));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		setBounds(100, 100, 660, 500);
 		contentPane = new JPanel();
 		contentPane.setAutoscrolls(true);
@@ -62,14 +66,15 @@ public class TelaPrincipal extends JFrame {
 		lblTecnofin.setBounds(38, 6, 568, 87);
 		contentPane.add(lblTecnofin);
 		
-		JButton btnPessoas = new JButton("PESSOAS");
-		btnPessoas.setForeground(Color.BLACK);
-		btnPessoas.setToolTipText("Click para acessar as pessoas f\u00EDsicas e jur\u00EDdicas que movimentam as transa\u00E7\u00F5es !");
-		btnPessoas.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnPessoas.setBounds(400, 144, 125, 75);
-		contentPane.add(btnPessoas);
-		
 		JButton btnBanco = new JButton("BANCO");
+		btnBanco.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaPrincipal tp = new TelaPrincipal();
+                tp.dispose();
+                TelaBanco tb = new TelaBanco();
+                tb.setVisible(true);
+			}
+		});
 		btnBanco.setForeground(Color.BLACK);
 		btnBanco.setToolTipText("Click para acessar os bancos de origem da empresa que realizam as transa\u00E7\u00F5s !");
 		btnBanco.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -77,7 +82,7 @@ public class TelaPrincipal extends JFrame {
 		btnBanco.setAlignmentX(Component.CENTER_ALIGNMENT);
 		contentPane.add(btnBanco);
 		
-		JButton btnAcesso = new JButton("ACESSO");
+		JButton btnAcesso = new JButton("USU\u00C1RIO");
 		btnAcesso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				TelaPrincipal tp = new TelaPrincipal();
@@ -89,18 +94,35 @@ public class TelaPrincipal extends JFrame {
 		btnAcesso.setForeground(Color.BLACK);
 		btnAcesso.setToolTipText("Click para realizar permitir acesso de usu\u00E1rios ao sistema !");
 		btnAcesso.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnAcesso.setBounds(122, 144, 125, 75);
+		btnAcesso.setBounds(400, 144, 125, 75);
 		contentPane.add(btnAcesso);
 		
 		JButton btnGerencial = new JButton("GERENCIAL");
+		btnGerencial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaPrincipal tp = new TelaPrincipal();
+                tp.dispose();
+                RelatorioGerencial rg = new RelatorioGerencial();
+                rg.setVisible(true);
+			}
+		});
 		btnGerencial.setForeground(Color.BLACK);
 		btnGerencial.setToolTipText("Click para acessar os relat\u00F3rios gerenciais !");
 		btnGerencial.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnGerencial.setBounds(122, 235, 125, 75);
+		btnGerencial.setBounds(400, 231, 125, 75);
 		btnGerencial.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		contentPane.add(btnGerencial);
 		
 		JButton btnConferencia = new JButton("CONFER\u00CANCIA");
+		btnConferencia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaPrincipal tp = new TelaPrincipal();
+                tp.dispose();
+                RelatorioConferencia rc = new RelatorioConferencia();
+                rc.setVisible(true);
+				
+			}
+		});
 		btnConferencia.setForeground(Color.BLACK);
 		btnConferencia.setToolTipText("Click para acessar os relat\u00F3rios de confer\u00EAncia !");
 		btnConferencia.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -108,6 +130,12 @@ public class TelaPrincipal extends JFrame {
 		contentPane.add(btnConferencia);
 		
 		JButton btnSair = new JButton("SAIR");
+		btnSair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				System.exit(0);
+			}
+		});
 		btnSair.setBorder(null);
 		btnSair.setBackground(new Color(255, 51, 0));
 		btnSair.setForeground(new Color(255, 255, 255));
@@ -125,8 +153,11 @@ public class TelaPrincipal extends JFrame {
 				
 				if(comboBoxMov.getSelectedItem() == "TRANSAÇÃO")
 				{
-					String s = (String) comboBoxMov.getSelectedItem();
-					System.out.println(s);
+					//String s = (String) comboBoxMov.getSelectedItem();
+					TelaPrincipal tp = new TelaPrincipal();
+                    tp.dispose();
+                    TelaTransacao tt = new TelaTransacao();
+                    tt.setVisible(true);
 				}
 				if(comboBoxMov.getSelectedItem() == "RECEITA") 
 				{
@@ -148,7 +179,38 @@ public class TelaPrincipal extends JFrame {
 		comboBoxMov.setToolTipText("Selecione para acessar as transa\u00E7\u00F5es banc\u00E1rias, despesas e receitas !");
 		comboBoxMov.setModel(new DefaultComboBoxModel(new String[] {"TRANSA\u00C7\u00C3O", "RECEITA", "DESPESA"}));
 		comboBoxMov.setName("");
-		comboBoxMov.setBounds(400, 235, 125, 75);
+		comboBoxMov.setBounds(123, 235, 125, 75);
 		contentPane.add(comboBoxMov);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(comboBox.getSelectedItem() == "PESSOA FÍSICA") 
+				{
+					TelaPrincipal tp = new TelaPrincipal();
+                    tp.dispose();
+                    TelaPF tpf = new TelaPF();
+                    tpf.setVisible(true);
+				}
+				if(comboBox.getSelectedItem() == "PESSOA JURÍDICA") 
+				{
+					TelaPrincipal tp = new TelaPrincipal();
+                    tp.dispose();
+                    TelaPJ tpj = new TelaPJ();
+                    tpj.setVisible(true);
+				}
+				
+			}
+		});
+		comboBox.setFont(new Font("Tahoma", Font.BOLD, 11));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"PESSOA F\u00CDSICA", "PESSOA JUR\u00CDDICA"}));
+		comboBox.setBounds(123, 145, 125, 75);
+		contentPane.add(comboBox);
+	}
+
+	protected static void EXIT_ON_CLOSE() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -14,6 +14,8 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RelatorioGerencial extends JFrame {
 
@@ -73,6 +75,14 @@ public class RelatorioGerencial extends JFrame {
 		contentPane.add(lblGerarRelatrioDas_1);
 		
 		JButton button = new JButton("");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RelatorioGerencial rg = new RelatorioGerencial();
+                rg.dispose();
+                TelaPrincipal tp = new TelaPrincipal();                
+                tp.setVisible(true);
+			}
+		});
 		button.setIcon(new ImageIcon(RelatorioGerencial.class.getResource("/javax/swing/plaf/metal/icons/ocean/homeFolder.gif")));
 		button.setToolTipText("Click para voltar a tela principal do sistema TECNOFIN !");
 		button.setFont(new Font("SansSerif", Font.BOLD, 12));

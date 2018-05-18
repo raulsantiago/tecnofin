@@ -1,16 +1,13 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import control.JuridicaControle;
+import model.PessoaJuridica;
 import java.awt.Toolkit;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import net.miginfocom.swing.MigLayout;
-import java.awt.GridLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
@@ -19,10 +16,11 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class TelaPJ extends JFrame {
-
-	private JPanel contentPane;
+public class TelaPJ extends JFrame {	
+	private JPanel contentPane;		
 	private JTextField textCidade;
 	private JTextField textUf;
 	private JTextField textCep;
@@ -37,9 +35,10 @@ public class TelaPJ extends JFrame {
 	private JTextField textBancoNum;
 	private JTextField textAgencia;
 	private JTextField textContaNum;
-	private JTextField textField;
+	private JTextField textTipoConta;
 	private JTextField textNome;
 	private JTextField textCnpj;
+	public JTextPane textNotas;
 
 	/**
 	 * Launch the application.
@@ -57,6 +56,28 @@ public class TelaPJ extends JFrame {
 		});
 	}
 
+	
+	public void limparCampos() 
+	{   
+	    textCidade.setText("");
+		textUf.setText("");
+		textCep.setText("");
+		textEndereco.setText("");
+		textNumero.setText("");
+		textComplemento.setText("");
+		textBairro.setText("");
+		textEmail.setText("");
+		textTelefone.setText("");
+		textCelular.setText("");
+		textBancoNome.setText("");
+		textBancoNum.setText("");
+		textAgencia.setText("");
+		textContaNum.setText("");
+		textTipoConta.setText("");
+		textNome.setText("");
+		textCnpj.setText("");
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -264,10 +285,10 @@ public class TelaPJ extends JFrame {
 		contentPane.add(textContaNum);
 		textContaNum.setColumns(10);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(711, 189, 212, 28);
-		contentPane.add(textField);
+		textTipoConta = new JTextField();
+		textTipoConta.setColumns(10);
+		textTipoConta.setBounds(711, 189, 212, 28);
+		contentPane.add(textTipoConta);
 		
 		textNome = new JTextField();
 		textNome.setBounds(49, 117, 554, 28);
@@ -280,24 +301,69 @@ public class TelaPJ extends JFrame {
 		textCnpj.setColumns(10);
 		
 		JButton btnSalvar = new JButton("SALVAR");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PessoaJuridica.cidade = textCidade.getText();
+			    PessoaJuridica.uf = textUf.getText();
+			    PessoaJuridica.cep = textCep.getText();
+			    PessoaJuridica.endereco = textEndereco.getText();
+			    PessoaJuridica.numero = textNumero.getText();
+			    PessoaJuridica.complemento = textComplemento.getText();
+			    PessoaJuridica.bairro = textBairro.getText();
+			    PessoaJuridica.email = textEmail.getText();
+			    PessoaJuridica.telefone = textTelefone.getText();
+			    PessoaJuridica.celular = textCelular.getText();
+			    PessoaJuridica.bancoNomePJ = textBancoNome.getText();
+			    PessoaJuridica.bancoNumPJ =  Integer.parseInt(String.valueOf(textBancoNum.getText()));
+			    PessoaJuridica.agenciaPJ = textAgencia.getText();
+			    PessoaJuridica.contaNumPJ = textContaNum.getText();
+			    PessoaJuridica.tipoContaPJ = textTipoConta.getText();
+			    PessoaJuridica.nomePJ = textNome.getText();
+			    PessoaJuridica.cnpj =  Long.parseLong(String.valueOf(textCnpj.getText()));
+			    JuridicaControle pj = new JuridicaControle();		     
+			    pj.salvar();
+			    limparCampos();
+			}
+		});
 		btnSalvar.setForeground(Color.GRAY);
 		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnSalvar.setBounds(222, 554, 125, 28);
 		contentPane.add(btnSalvar);
 		
 		JButton btnConsulta = new JButton("CONSULTA");
+		btnConsulta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaPJ tpj = new TelaPJ();
+                tpj.dispose();                
+				ShowPJ spj = new ShowPJ();
+				spj.setVisible(true);
+			}
+		});
 		btnConsulta.setForeground(Color.GRAY);
 		btnConsulta.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnConsulta.setBounds(429, 554, 125, 28);
 		contentPane.add(btnConsulta);
 		
 		JButton btnLimpar = new JButton("LIMPAR");
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				limparCampos();
+			}
+		});
 		btnLimpar.setForeground(Color.GRAY);
 		btnLimpar.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnLimpar.setBounds(639, 554, 125, 28);
 		contentPane.add(btnLimpar);
 		
 		JButton btnHome = new JButton("");
+		btnHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaPJ tpj = new TelaPJ();
+                tpj.dispose();    
+                TelaPrincipal tp = new TelaPrincipal();
+                tp.setVisible(true);
+			}
+		});
 		btnHome.setIcon(new ImageIcon(TelaPJ.class.getResource("/javax/swing/plaf/metal/icons/ocean/homeFolder.gif")));
 		btnHome.setToolTipText("Click para voltar a tela principal do sistema TECNOFIN !");
 		btnHome.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -306,6 +372,16 @@ public class TelaPJ extends JFrame {
 		
 		JTextPane textNotas = new JTextPane();
 		textNotas.setBounds(49, 452, 874, 76);
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			    PessoaJuridica.notas = textNotas.getText();
+			}
+		});
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textNotas.setText("");
+			}
+		});
 		contentPane.add(textNotas);
 	}
 }

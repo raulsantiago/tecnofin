@@ -221,7 +221,7 @@ public class TelaDespesa extends JFrame {
 		});
 		btnAlterar.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnAlterar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnAlterar.setBounds(306, 127, 95, 36);
+		btnAlterar.setBounds(309, 127, 117, 36);
 		panel.add(btnAlterar);
 		
 		JButton btnExcluir = new JButton("EXCLUIR");
@@ -249,7 +249,7 @@ public class TelaDespesa extends JFrame {
 		});
 		btnExcluir.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnExcluir.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnExcluir.setBounds(410, 127, 95, 36);
+		btnExcluir.setBounds(435, 125, 120, 36);
 		panel.add(btnExcluir);
 		
 		JButton btnConsultar = new JButton("CONSULTAR");
@@ -271,7 +271,7 @@ public class TelaDespesa extends JFrame {
 		});		
 		btnConsultar.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnConsultar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnConsultar.setBounds(173, 127, 127, 36);
+		btnConsultar.setBounds(176, 127, 127, 36);
 		panel.add(btnConsultar);
 		
 		JScrollPane scrollPane = new JScrollPane();
