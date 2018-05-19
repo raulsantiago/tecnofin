@@ -1,30 +1,20 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import conexoes.Conexao;
 import control.TransacaoControle;
-import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
-import model.Receita;
+import model.PessoaJuridica;
 import model.Transacao;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.SwingConstants;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JTree;
-import java.awt.Scrollbar;
-import java.awt.Choice;
-import javax.swing.JSpinner;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
@@ -38,11 +28,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.event.PopupMenuEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.InputMethodEvent;
+import java.util.Locale;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class TelaTransacao extends JFrame {
 
@@ -51,6 +43,8 @@ public class TelaTransacao extends JFrame {
 	private JTextField textData;
 	public static String transacao_pf_pj;
 	public static String transacao_rec_desp;
+	public static String nomerecdesp;
+	public static String sinal;
 
 	/**
 	 * Launch the application.
@@ -86,6 +80,72 @@ public class TelaTransacao extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JButton btnSalvar = new JButton("SALVAR");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Transacao.valor = Double.parseDouble(String.valueOf(textValor.getText()));
+				Transacao.dataTransacao = textData.getText();
+				
+				// CALCULANDO O SALDO		
+				if(!textValor.equals(""))
+				{	
+					Connection conn = null;
+				    PreparedStatement pstmt = null;
+				    ResultSet rs = null;
+				    conn = Conexao.getConexao(); //conectar ao banco de dados
+				    
+				    String sql1 = "SELECT saldo FROM bancos WHERE idBancos = ('"+Transacao.FK_idBancos+"');";
+				    if(!sql1.equals("SELECT saldo FROM bancos WHERE idBancos = ('null');")) 
+				    {
+				    	//System.out.println(sql1);
+				    	try 
+				    	{
+				    		pstmt = conn.prepareStatement(sql1);
+			            	rs = pstmt.executeQuery();
+			            	double sdl = rs.getDouble("saldo");
+			            	if(sinal == "-") 
+							{
+								Transacao.saldo = (sdl - Transacao.valor);
+							} else 
+							{
+								Transacao.saldo = (sdl + Transacao.valor);
+							}
+					        
+				    	}
+				    	 catch(SQLException ex)
+					    {
+				
+					    }
+				    	finally
+					    {
+					    	Conexao.fecharConexao(conn, pstmt, rs);
+					    }
+				   }
+				}					  
+				/*
+				System.out.println("Transacao.tipo="+Transacao.tipo);
+			    System.out.println("Transacao.dataTransacao="+Transacao.dataTransacao);
+			    System.out.println("Transacao.descricao="+Transacao.descricao);
+				System.out.println("Transacao.valor="+Transacao.valor);
+				System.out.println("Transacao.FK_idDespesa="+Transacao.FK_idDespesa);
+				System.out.println("Transacao.FK_idReceita="+Transacao.FK_idReceita);
+				System.out.println("Transacao.FK_cnpj="+Transacao.FK_cnpj);
+				System.out.println("Transacao.FK_cpf="+Transacao.FK_cpf);
+				System.out.println("Transacao.FK_idBancos="+Transacao.FK_idBancos);
+				System.out.println("Transacao.saldo="+Transacao.saldo);
+				*/
+				TransacaoControle tc = new TransacaoControle();
+				tc.salvar();
+			    limparCampos();
+			}
+		});
+		btnSalvar.setForeground(Color.GRAY);
+		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnSalvar.setBounds(111, 584, 125, 28);
+		contentPane.add(btnSalvar);
+		
+		
 		JLabel lblTransaesBancrias = new JLabel("TRANSA\u00C7\u00D5ES BANC\u00C1RIAS");
 		lblTransaesBancrias.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTransaesBancrias.setHorizontalAlignment(SwingConstants.CENTER);
@@ -101,6 +161,45 @@ public class TelaTransacao extends JFrame {
 		contentPane.add(lblFavorecido);
 		
 		JComboBox BoxContaBanco = new JComboBox();
+		BoxContaBanco.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String contabanco = String.valueOf(BoxContaBanco.getSelectedItem());
+				//System.out.println("CONTA BANCO = "+contabanco);
+				StringTokenizer contaB = new StringTokenizer(contabanco, " ");
+				String conta = contaB.nextToken();
+				//System.out.println(conta);
+				int qtd = conta.length();
+				String nomebanco = contabanco.substring(qtd+1);
+				//System.out.println(nomebanco);			
+				
+				// Seleciona o ID do banco escolhido pelo usuário
+				Connection conn = null;
+			    PreparedStatement pstmt = null;
+			    ResultSet rs = null;
+			    conn = Conexao.getConexao(); //conectar ao banco de dados
+			    String sql1 = "SELECT idBancos FROM bancos WHERE contaNum = ('"+conta+"') AND nome = ('"+nomebanco+"');";
+			    if(!sql1.equals("SELECT idBancos FROM bancos WHERE contaNum = ('null') AND nome = ('null');")) 
+			    {
+			    	try 
+			    	{
+			    		pstmt = conn.prepareStatement(sql1);
+		            	rs = pstmt.executeQuery();
+		            	Transacao.FK_idBancos = rs.getInt("idBancos");
+				        //System.out.println("Variavel Transacao.FK_idBancos = "+Transacao.FK_idBancos);
+				    	//Conexao.fecharConexao(conn, pstmt, rs);
+			    	}
+			    	 catch(SQLException ex)
+				    {
+			    		 JOptionPane.showMessageDialog(null, "Erro ao select bancos. Erro: " + ex);
+				    }
+			    	finally
+				    {
+				    	Conexao.fecharConexao(conn, pstmt, rs);
+				    }
+			   } 
+				
+			}
+		});
 				Connection conn = null;
 			    PreparedStatement pstmt = null;
 			    ResultSet rs = null;
@@ -142,7 +241,92 @@ public class TelaTransacao extends JFrame {
 		BoxReceitaDespesa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String transacao_rec_desp = String.valueOf(BoxReceitaDespesa.getSelectedItem());				
+				// RECEITA
+				
+				String transacao_rec_desp = String.valueOf(BoxReceitaDespesa.getSelectedItem());
+				//System.out.println("VARIAVEL transacao_rec_desp = "+transacao_rec_desp);
+				StringTokenizer recdesp = new StringTokenizer(transacao_rec_desp, " ");
+				String contarecdesp = recdesp.nextToken();				
+				int qtd = contarecdesp.length();
+				if(!transacao_rec_desp.equals("") && !transacao_rec_desp.equals("null") && !transacao_rec_desp.equals(null)) 
+				{
+					nomerecdesp = transacao_rec_desp.substring(qtd+1);
+				}
+								
+				//System.out.println(contarecdesp);	
+				//System.out.println(nomerecdesp);
+				
+				if(!transacao_rec_desp.equals("") && !transacao_rec_desp.equals("null") && !transacao_rec_desp.equals(null))
+				{	
+					// Seleciona o ID da receita quando escolhido pelo usuário
+					Connection conn = null;
+				    PreparedStatement pstmt = null;
+				    ResultSet rs = null;
+				    conn = Conexao.getConexao(); //conectar ao banco de dados
+				    String sql1 = "SELECT idReceita FROM receita WHERE contaReceita = ('"+contarecdesp+"') AND nomeReceita = ('"+nomerecdesp+"');";
+				    if(!sql1.equals("SELECT idReceita FROM receita WHERE contaReceita = ('null') AND nomeReceita = ('null');")) 
+				    {
+				    	//System.out.println(sql1);
+				    	try 
+				    	{
+				    		pstmt = conn.prepareStatement(sql1);
+			            	rs = pstmt.executeQuery();
+			            	Transacao.FK_idReceita = rs.getInt("idReceita");
+					        //System.out.println("Variavel Transacao.FK_idReceita = "+Transacao.FK_idReceita);
+					        //rs.close();
+					    	//Conexao.fecharConexao(conn, pstmt, rs);
+				    	}
+				    	 catch(SQLException ex)
+					    {
+				
+					    }
+				    	finally
+					    {
+					    	Conexao.fecharConexao(conn, pstmt, rs);
+					    }
+				   }
+				} 
+				
+				// DESPESA
+				
+				if(!transacao_rec_desp.equals("") && !transacao_rec_desp.equals("null") && !transacao_rec_desp.equals(null))
+				{	
+					// Seleciona o ID da despesa quando escolhido pelo usuário
+					Connection conn = null;
+				    PreparedStatement pstmt = null;
+				    ResultSet rs = null;
+				    conn = Conexao.getConexao(); //conectar ao banco de dados
+				    String sql1 = "SELECT idDespesa FROM despesa WHERE contaDespesa = ('"+contarecdesp+"') AND nomeDespesa = ('"+nomerecdesp+"');";
+				    if(!sql1.equals("SELECT idDespesa FROM despesa WHERE contaDespesa = ('null') AND nomeDespesa = ('null');")) 
+				    {
+				    	//System.out.println(sql1);
+				    	try 
+				    	{
+				    		pstmt = conn.prepareStatement(sql1);
+			            	rs = pstmt.executeQuery();
+			            	Transacao.FK_idDespesa = rs.getInt("idDespesa");
+					        //System.out.println("Variavel Transacao.FK_idDespesa = "+Transacao.FK_idDespesa);
+					        //rs.close();
+					    	//Conexao.fecharConexao(conn, pstmt, rs);
+				    	}
+				    	 catch(SQLException ex)
+					    {
+				
+					    }
+				    	finally
+					    {
+					    	Conexao.fecharConexao(conn, pstmt, rs);
+					    }
+				   }
+				}
+				
+				
+				
+			}
+		});
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BoxReceitaDespesa.removeAllItems();			    
 			}
 		});
 		BoxReceitaDespesa.setBounds(96, 344, 313, 35);
@@ -223,9 +407,14 @@ public class TelaTransacao extends JFrame {
 
 			
 		});
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BoxTipoRecDes.setSelectedIndex(0);			    
+			}
+		});
 		BoxTipoRecDes.setForeground(Color.GRAY);
 		BoxTipoRecDes.setFont(new Font("Tahoma", Font.BOLD, 12));
-		BoxTipoRecDes.setModel(new DefaultComboBoxModel(new String[] {"DESPESA", "RECEITA"}));
+		BoxTipoRecDes.setModel(new DefaultComboBoxModel(new String[] {"SELECIONE", "DESPESA", "RECEITA"}));
 		BoxTipoRecDes.setBounds(96, 284, 313, 35);
 		contentPane.add(BoxTipoRecDes);
 		
@@ -241,13 +430,6 @@ public class TelaTransacao extends JFrame {
 		label.setBounds(106, 329, 231, 16);
 		contentPane.add(label);
 		
-		JComboBox BoxTipo = new JComboBox();
-		BoxTipo.setModel(new DefaultComboBoxModel(new String[] {"PAGAMENTO", "RECEBIMENTO", "ESTORNO", "APLICA\u00C7\u00C3O", "RESGATE", "RENDIMENTO", "PREJU\u00CDZO"}));
-		BoxTipo.setForeground(Color.GRAY);
-		BoxTipo.setFont(new Font("Tahoma", Font.BOLD, 12));
-		BoxTipo.setBounds(96, 400, 313, 35);
-		contentPane.add(BoxTipo);
-		
 		JLabel lblTipoDaTransao = new JLabel("TIPO DA TRANSA\u00C7\u00C3O BANC\u00C1RIA");
 		lblTipoDaTransao.setForeground(Color.GRAY);
 		lblTipoDaTransao.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -255,6 +437,17 @@ public class TelaTransacao extends JFrame {
 		contentPane.add(lblTipoDaTransao);
 		
 		textValor = new JTextField();
+		textValor.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				String vl = textValor.getText();				
+				if(!vl.matches("\\d{1,16}\\.\\d{2}"))
+				{
+					JOptionPane.showMessageDialog(null,"Formato do valor incorreto! Exemplo do certo:  1234567.89","ERRO",JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		textValor.setLocale(new Locale("pt", "BR"));		
 		textValor.setBounds(96, 454, 170, 28);
 		contentPane.add(textValor);
 		textValor.setColumns(10);
@@ -266,6 +459,16 @@ public class TelaTransacao extends JFrame {
 		contentPane.add(lblValor);
 		
 		textData = new JTextField();
+		textData.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				String vl = textData.getText();
+				if(!vl.matches("\\d{2}/\\d{2}/\\d{4}"))
+				{
+					JOptionPane.showMessageDialog(null,"Formato da data incorreto! Exemplo do certo: 12/05/2018","ERRO",JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		textData.setColumns(10);
 		textData.setBounds(318, 454, 170, 28);
 		contentPane.add(textData);
@@ -282,9 +485,7 @@ public class TelaTransacao extends JFrame {
 		lblInformaesComplementaresDa.setBounds(106, 492, 348, 16);
 		contentPane.add(lblInformaesComplementaresDa);
 		
-		JTextPane textDescricao = new JTextPane();
-		textDescricao.setBounds(96, 508, 502, 61);
-		contentPane.add(textDescricao);
+		
 		
 		JButton btnHome = new JButton("");
 		btnHome.addActionListener(new ActionListener() {
@@ -301,11 +502,7 @@ public class TelaTransacao extends JFrame {
 		btnHome.setBounds(315, 613, 53, 36);
 		contentPane.add(btnHome);
 		
-		JButton btnSalvar = new JButton("SALVAR");
-		btnSalvar.setForeground(Color.GRAY);
-		btnSalvar.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnSalvar.setBounds(111, 584, 125, 28);
-		contentPane.add(btnSalvar);
+		
 		
 		JButton btnConsulta = new JButton("CONSULTA");
 		btnConsulta.setForeground(Color.GRAY);
@@ -313,7 +510,81 @@ public class TelaTransacao extends JFrame {
 		btnConsulta.setBounds(457, 585, 125, 28);
 		contentPane.add(btnConsulta);
 		
-		JComboBox BoxFavorecido = new JComboBox();				
+		JComboBox BoxFavorecido = new JComboBox();
+		BoxFavorecido.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// PESSOA FISICA
+				
+				String transacao_pf_pj = String.valueOf(BoxFavorecido.getSelectedItem());
+				//System.out.println("variavel transacao_pf_pj = "+transacao_pf_pj);
+				if(!transacao_pf_pj.equals("") && !transacao_pf_pj.equals("null") && !transacao_pf_pj.equals(null))
+				{	
+					// Seleciona o ID do favorecido escolhido pelo usuário
+					Connection conn = null;
+				    PreparedStatement pstmt = null;
+				    ResultSet rs = null;
+				    conn = Conexao.getConexao(); //conectar ao banco de dados
+				    String sql1 = "SELECT cpf FROM pessoaFisica WHERE nomePF = ('"+transacao_pf_pj+"');";
+				    if(!sql1.equals("SELECT cpf FROM pessoaFisica WHERE nomePF = ('null');")) 
+				    {
+				    	//System.out.println(sql1);
+				    	try 
+				    	{
+				    		pstmt = conn.prepareStatement(sql1);
+			            	rs = pstmt.executeQuery();
+			            	Transacao.FK_cpf = rs.getLong("cpf");
+					        //System.out.println("Variavel Transacao.FK_cpf = "+Transacao.FK_cpf);
+					        //rs.close();
+					    	Conexao.fecharConexao(conn, pstmt, rs);
+				    	}
+				    	 catch(SQLException ex)
+					    {
+				
+					    }
+				    	finally
+					    {
+					    	Conexao.fecharConexao(conn, pstmt, rs);
+					    }
+				   }
+				} 
+				
+				// PESSOA JURIDICA
+				
+				if(!transacao_pf_pj.equals("") && !transacao_pf_pj.equals("null") && !transacao_pf_pj.equals(null)) 
+				{	
+					// Seleciona o ID do favorecido escolhido pelo usuário
+					Connection connn = null;
+				    PreparedStatement pstmtt = null;
+				    ResultSet rss = null;							    
+				    connn = Conexao.getConexao(); //conectar ao banco de dados
+				    String sql2 = "SELECT cnpj FROM pessoaJuridica WHERE nomePJ = ('"+transacao_pf_pj+"');";
+				    if(!sql1.equals("SELECT cnpj FROM pessoaJuridica WHERE nomePJ = ('null');")) 
+				    {	
+				    	try
+					    {
+				    		pstmtt = connn.prepareStatement(sql2);
+			            	rss = pstmtt.executeQuery();
+			            	Transacao.FK_cnpj = rss.getLong("cnpj");
+					        //System.out.println("Variavel Transacao.FK_cnpj = "+Transacao.FK_cnpj);
+					    	Conexao.fecharConexao(connn, pstmtt, rss);					    }
+					    catch(SQLException ex)
+					    {
+
+					    }
+					    finally
+					    {
+					    	Conexao.fecharConexao(connn, pstmtt, rss);
+					    }				    	
+				    }
+				}
+			}
+		});
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BoxFavorecido.removeAllItems();			    
+			}
+		});
 		BoxFavorecido.setBounds(96, 227, 502, 35);
 		contentPane.add(BoxFavorecido);
 		
@@ -340,13 +611,20 @@ public class TelaTransacao extends JFrame {
 				        pstmt = conn.prepareStatement(sql1);
 				        rs = pstmt.executeQuery();
 				        List<String> strList = new ArrayList<String>();
-				        while(rs.next())
+				        while(rs.next()) 
 				        {
-				            strList.add(rs.getString("nomePF"));
-				        }	
-				        
+				        	try
+					        {
+				        	    strList.add(rs.getString("nomePF"));
+					        }
+				        	 catch(SQLException ex)
+							 {
+							   	JOptionPane.showMessageDialog(null, "Erro ao preencher PF BoxTipoFavorecido. Erro: " + ex);
+							 }
+				        }
+				        rs.close();				        
 				        for (String sf:strList)			    		
-				        	BoxFavorecido.addItem(sf);
+				        	BoxFavorecido.addItem(sf);				        
 				    }
 				    catch(SQLException ex)
 				    {
@@ -354,71 +632,8 @@ public class TelaTransacao extends JFrame {
 				    }
 				    finally
 				    {
-				    	Conexao.fecharConexao(conn, pstmt);
+				    	Conexao.fecharConexao(conn, pstmt, rs);
 				    }
-				    
-				    
-				    BoxFavorecido.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {							
-							String transacao_pf_pj = String.valueOf(BoxFavorecido.getSelectedItem());
-							if(transacao_pf_pj == null && transacao_pf_pj.equals(null))
-							{
-								
-							} else 
-							{
-								
-								System.out.println("variavel transacao_pf_pj = "+transacao_pf_pj);
-								
-								// Seleciona o ID do favorecido escolhido pelo usuário
-								Connection conn = null;
-							    PreparedStatement pstmt = null;
-							    ResultSet rs = null;
-							    conn = Conexao.getConexao(); //conectar ao banco de dados			        
-						        
-							    String sql1 = "SELECT cpf FROM pessoaFisica WHERE nomePF = ('"+transacao_pf_pj+"');";
-							    
-							    if(sql1.equals("SELECT cpf FROM pessoaFisica WHERE nomePF = ('null');")) 
-							    {
-							    	System.out.println("PARAR");							    	
-							    } else 
-							    {
-
-							    System.out.println(sql1);
-							   			    
-							    try
-							    {
-							        pstmt = conn.prepareStatement(sql1);						            
-						            if(pstmt == null && transacao_pf_pj == null)						            
-						            {
-						            	
-						            } else if(rs == null && transacao_pf_pj == null)
-						            {
-						            	
-						            }else 
-						            {
-						            	rs = pstmt.executeQuery();
-						            	Transacao.FK_cpf = rs.getLong("cpf");
-								        System.out.println(Transacao.FK_cpf);								        
-						            }						            			        
-							        
-							    }
-							    catch(SQLException ex)
-							    {
-							    	JOptionPane.showMessageDialog(null, "Erro no BD ao selecionar PF BoxFavorecido. Erro: " + ex);
-							    }
-							    finally
-							    {
-							    	Conexao.fecharConexao(conn, pstmt);
-							    }
-							    
-							    }
-								
-							}
-							
-						}
-					});
-				    
-				    
 				}
 				
 				// PESSOA JURIDICA
@@ -440,11 +655,18 @@ public class TelaTransacao extends JFrame {
 				        pstmt = conn.prepareStatement(sql2);
 				        rs = pstmt.executeQuery();
 				        List<String> strList = new ArrayList<String>();
-				        while(rs.next())
+				        while(rs.next()) 
 				        {
-				            strList.add(rs.getString("nomePJ"));
-				        }	
-				        
+				        	try
+					        {
+					            strList.add(rs.getString("nomePJ"));
+					        }
+				        	 catch(SQLException ex)
+							 {
+							   	JOptionPane.showMessageDialog(null, "Erro ao preencher PJ BoxTipoFavorecido. Erro: " + ex);
+							 }
+				        }
+				        rs.close();
 				        for (String sj:strList)			    		
 				        	BoxFavorecido.addItem(sj);				        
 				    }
@@ -454,62 +676,18 @@ public class TelaTransacao extends JFrame {
 				    }
 				    finally
 				    {
-				    	Conexao.fecharConexao(conn, pstmt);
-				    }
+				    	Conexao.fecharConexao(conn, pstmt, rs);				    }
 				    
-				    
-				    BoxFavorecido.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {				
-							String transacao_pf_pj = String.valueOf(BoxFavorecido.getSelectedItem());
-							if(transacao_pf_pj.equals("")) 
-							{
-								
-							} else 
-							{
-								
-								System.out.println(transacao_pf_pj);
-								
-								// Seleciona o ID do favorecido escolhido pelo usuário
-								Connection conn = null;
-							    PreparedStatement pstmt = null;
-							    ResultSet rs = null;							    
-							    conn = Conexao.getConexao(); //conectar ao banco de dados
-							    
-							    String sql2 = "SELECT cnpj FROM pessoaJuridica WHERE nomePJ = ('"+transacao_pf_pj+"');";
-							    System.out.println(sql2);
-							    
-							    try
-							    {
-							    	pstmt = conn.prepareStatement(sql2);
-							    	if(pstmt == null && transacao_pf_pj.equals(""))
-						            {
-						            	
-						            } else 
-						            {
-						            	rs = pstmt.executeQuery();
-						            	Transacao.FK_cnpj = rs.getLong("cnpj");
-								        System.out.println(Transacao.FK_cnpj);								        
-						            }
-							        
-							    }
-							    catch(SQLException ex)
-							    {
-							    	JOptionPane.showMessageDialog(null, "Erro no BD ao selecionar PJ BoxFavorecido. Erro: " + ex);
-							    }
-							    finally
-							    {
-							    	Conexao.fecharConexao(conn, pstmt);
-							    }
-								
-							}
-							
-						}
-					});
 				    
 				}
 			}
 		});
-		BoxTipoFavorecido.setModel(new DefaultComboBoxModel(new String[] {"PESSOA F\u00CDSICA", "PESSOA JUR\u00CDDICA"}));
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BoxTipoFavorecido.setSelectedIndex(0);			    
+			}
+		});
+		BoxTipoFavorecido.setModel(new DefaultComboBoxModel(new String[] {"SELECIONE", "PESSOA F\u00CDSICA", "PESSOA JUR\u00CDDICA"}));
 		BoxTipoFavorecido.setForeground(Color.GRAY);
 		BoxTipoFavorecido.setFont(new Font("Tahoma", Font.BOLD, 12));
 		BoxTipoFavorecido.setBounds(96, 164, 313, 35);
@@ -520,5 +698,102 @@ public class TelaTransacao extends JFrame {
 		lblTipoDeFavorecido.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblTipoDeFavorecido.setBounds(106, 150, 231, 16);
 		contentPane.add(lblTipoDeFavorecido);
+		
+		JTextPane textDescricao = new JTextPane();
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			    Transacao.descricao = textDescricao.getText();
+			    textDescricao.setText("");
+			}
+		});		
+		textDescricao.setBounds(96, 508, 502, 61);
+		contentPane.add(textDescricao);
+		
+		JComboBox BoxTipo = new JComboBox();
+		BoxTipo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(BoxTipo.getSelectedItem() == "PAGAMENTO") 
+				{
+					Transacao.tipo = "PAGAMENTO";
+					sinal = "-";
+				}				
+				if(BoxTipo.getSelectedItem() == "RECEBIMENTO") 
+				{
+					Transacao.tipo = "RECEBIMENTO";
+					sinal = "+";
+				}				
+				if(BoxTipo.getSelectedItem() == "ESTORNO") 
+				{
+					Transacao.tipo = "ESTORNO";
+					if(BoxTipoRecDes.getSelectedItem() == "RECEITA")
+					{
+						sinal = "-";						
+					}
+					if(BoxTipoRecDes.getSelectedItem() == "DESPESA")
+					{
+						sinal = "+";
+					}
+					
+				}				
+				if(BoxTipo.getSelectedItem() == "APLICAÇÃO") 
+				{
+					Transacao.tipo = "APLICAÇÃO";
+					if(BoxTipoRecDes.getSelectedItem() == "RECEITA")
+					{
+						sinal = "+";						
+					}
+					if(BoxTipoRecDes.getSelectedItem() == "DESPESA")
+					{
+						sinal = "-";
+					}
+				}				
+				if(BoxTipo.getSelectedItem() == "RESGATE") 
+				{
+					Transacao.tipo = "RESGATE";
+					if(BoxTipoRecDes.getSelectedItem() == "RECEITA")
+					{
+						sinal = "-";						
+					}
+					if(BoxTipoRecDes.getSelectedItem() == "DESPESA")
+					{
+						sinal = "+";
+					}
+				}				
+				if(BoxTipo.getSelectedItem() == "RENDIMENTO") 
+				{
+					Transacao.tipo = "RENDIMENTO";
+					sinal = "+";
+				}				
+				if(BoxTipo.getSelectedItem() == "PREJUÍZO") 
+				{
+					Transacao.tipo = "PREJUÍZO";
+					sinal = "-";
+				}
+				
+				//System.out.println("VARIAVEL Transacao.tipo = "+Transacao.tipo);
+				
+			}
+		});
+		BoxTipo.setModel(new DefaultComboBoxModel(new String[] {"SELECIONE", "PAGAMENTO", "RECEBIMENTO", "ESTORNO", "APLICA\u00C7\u00C3O", "RESGATE", "RENDIMENTO", "PREJU\u00CDZO"}));
+		BoxTipo.setForeground(Color.GRAY);
+		BoxTipo.setFont(new Font("Tahoma", Font.BOLD, 12));
+		BoxTipo.setBounds(96, 400, 313, 35);
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BoxTipo.setSelectedIndex(0);			    
+			}
+		});
+		contentPane.add(BoxTipo);
+		
+		
+		
 	}
+	
+	public void limparCampos() 
+	{   
+		textValor.setText("");
+	    textData.setText("");	    
+	}
+	
 }

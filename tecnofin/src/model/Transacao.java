@@ -8,6 +8,8 @@ public class Transacao {
 	public static String descricao;
 	public static Double valor;
 	
+	public static Double saldo;
+	
 	public static int FK_idDespesa;
 	public static int FK_idReceita;
 	public static long FK_cnpj;
