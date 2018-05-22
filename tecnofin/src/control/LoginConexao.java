@@ -37,6 +37,7 @@ public class LoginConexao {
             {
             String usuario = rs.getString("email");
             String password = rs.getString("senha");
+            Login.admin = rs.getInt("admin");
                 if(usuario.equals(Login.email) && password.equals(Login.senha))
                 {
                     TelaPrincipal tp = new TelaPrincipal();

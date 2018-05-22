@@ -16,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class RelatorioGerencial extends JFrame {
 
@@ -63,12 +65,30 @@ public class RelatorioGerencial extends JFrame {
 		contentPane.add(lblRelatriosGerenciais);
 		
 		JLabel lblGerarRelatrioDas = new JLabel("GERAR RELAT\u00D3RIO DAS RECEITAS");
+		lblGerarRelatrioDas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				RelatorioGerencial rg = new RelatorioGerencial();
+                rg.dispose();
+                RelatorioReceita tp = new RelatorioReceita();                
+                tp.setVisible(true);
+			}
+		});
 		lblGerarRelatrioDas.setForeground(Color.GRAY);
 		lblGerarRelatrioDas.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblGerarRelatrioDas.setBounds(35, 167, 495, 30);
 		contentPane.add(lblGerarRelatrioDas);
 		
 		JLabel lblGerarRelatrioDas_1 = new JLabel("GERAR RELAT\u00D3RIO DAS DESPESAS");
+		lblGerarRelatrioDas_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				RelatorioGerencial rg = new RelatorioGerencial();
+                rg.dispose();
+                RelatorioDespesa tp = new RelatorioDespesa();                
+                tp.setVisible(true);
+			}
+		});
 		lblGerarRelatrioDas_1.setForeground(Color.GRAY);
 		lblGerarRelatrioDas_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblGerarRelatrioDas_1.setBounds(35, 223, 505, 30);
@@ -90,6 +110,15 @@ public class RelatorioGerencial extends JFrame {
 		contentPane.add(button);
 		
 		JLabel lblGerarRelatrioDe = new JLabel("GERAR RELAT\u00D3RIO DE INVESTIMENTOS FINANCEIROS");
+		lblGerarRelatrioDe.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				RelatorioGerencial rg = new RelatorioGerencial();
+                rg.dispose();
+                RelatorioInvestimento tp = new RelatorioInvestimento();                
+                tp.setVisible(true);
+			}
+		});
 		lblGerarRelatrioDe.setForeground(Color.GRAY);
 		lblGerarRelatrioDe.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblGerarRelatrioDe.setBounds(35, 276, 505, 30);

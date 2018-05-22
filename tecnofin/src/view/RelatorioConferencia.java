@@ -16,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class RelatorioConferencia extends JFrame {
 
@@ -62,17 +64,36 @@ public class RelatorioConferencia extends JFrame {
 		lblRelatriosDasTransaes.setBounds(80, 19, 524, 50);
 		contentPane.add(lblRelatriosDasTransaes);
 		
-		JLabel lblGerarRelatrioDe = new JLabel("GERAR RELAT\u00D3RIO DAS TRANSA\u00C7\u00D5ES BANC\u00C1RIAS");
-		lblGerarRelatrioDe.setForeground(Color.GRAY);
-		lblGerarRelatrioDe.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblGerarRelatrioDe.setBounds(20, 151, 495, 30);
-		contentPane.add(lblGerarRelatrioDe);
+		JLabel lblRelatrioTransacao = new JLabel("GERAR RELAT\u00D3RIO DAS TRANSA\u00C7\u00D5ES BANC\u00C1RIAS");
+		lblRelatrioTransacao.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				RelatorioConferencia rg = new RelatorioConferencia();
+                rg.dispose();
+                RelatorioTransacao tp = new RelatorioTransacao();                
+                tp.setVisible(true);
+				
+			}
+		});
+		lblRelatrioTransacao.setForeground(Color.GRAY);
+		lblRelatrioTransacao.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblRelatrioTransacao.setBounds(20, 151, 495, 30);
+		contentPane.add(lblRelatrioTransacao);
 		
-		JLabel lblGerarRelatrioDe_1 = new JLabel("GERAR RELAT\u00D3RIO DE SALDO DAS CONTAS BANC\u00C1RIAS");
-		lblGerarRelatrioDe_1.setForeground(Color.GRAY);
-		lblGerarRelatrioDe_1.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblGerarRelatrioDe_1.setBounds(20, 203, 505, 30);
-		contentPane.add(lblGerarRelatrioDe_1);
+		JLabel lblRelatrioSaldo = new JLabel("GERAR RELAT\u00D3RIO DE SALDO DAS CONTAS BANC\u00C1RIAS");
+		lblRelatrioSaldo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				RelatorioConferencia rg = new RelatorioConferencia();
+                rg.dispose();
+                RelatorioSaldo tp = new RelatorioSaldo();                
+                tp.setVisible(true);
+			}
+		});
+		lblRelatrioSaldo.setForeground(Color.GRAY);
+		lblRelatrioSaldo.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblRelatrioSaldo.setBounds(20, 203, 505, 30);
+		contentPane.add(lblRelatrioSaldo);
 		
 		JButton button = new JButton("");
 		button.addActionListener(new ActionListener() {

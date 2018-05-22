@@ -4,7 +4,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.Login;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.Component;
@@ -85,10 +90,18 @@ public class TelaPrincipal extends JFrame {
 		JButton btnAcesso = new JButton("USU\u00C1RIO");
 		btnAcesso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TelaPrincipal tp = new TelaPrincipal();
-                tp.dispose();
-                TelaCadLogin tr = new TelaCadLogin();
-                tr.setVisible(true);
+				
+				if(Login.admin == 0) 
+				{
+					JOptionPane.showMessageDialog(null, "Usuário não tem permissão para acesso ! Favor contactar um adminitrador do sistema.");
+				} else 
+				{
+					TelaPrincipal tp = new TelaPrincipal();
+	                tp.dispose();
+	                TelaCadLogin tr = new TelaCadLogin();
+	                tr.setVisible(true);
+				}
+				
 			}
 		});
 		btnAcesso.setForeground(Color.BLACK);
@@ -100,10 +113,17 @@ public class TelaPrincipal extends JFrame {
 		JButton btnGerencial = new JButton("GERENCIAL");
 		btnGerencial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TelaPrincipal tp = new TelaPrincipal();
-                tp.dispose();
-                RelatorioGerencial rg = new RelatorioGerencial();
-                rg.setVisible(true);
+				if(Login.admin == 0) 
+				{
+					JOptionPane.showMessageDialog(null, "Usuário não tem permissão para acesso ! Favor contactar um adminitrador do sistema.");
+				} else 
+				{
+					TelaPrincipal tp = new TelaPrincipal();
+	                tp.dispose();
+	                RelatorioGerencial rg = new RelatorioGerencial();
+	                rg.setVisible(true);
+				}
+				
 			}
 		});
 		btnGerencial.setForeground(Color.BLACK);

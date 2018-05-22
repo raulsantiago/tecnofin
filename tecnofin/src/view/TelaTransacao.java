@@ -41,8 +41,8 @@ public class TelaTransacao extends JFrame {
 	private JPanel contentPane;
 	private JTextField textValor;
 	private JTextField textData;
-	public static String transacao_pf_pj;
-	public static String transacao_rec_desp;
+	//public static String transacao_pf_pj;
+	//public static String transacao_rec_desp;
 	public static String nomerecdesp;
 	public static String sinal;
 
@@ -97,19 +97,18 @@ public class TelaTransacao extends JFrame {
 				    
 				    String sql1 = "SELECT saldo FROM bancos WHERE idBancos = ('"+Transacao.FK_idBancos+"');";
 				    if(!sql1.equals("SELECT saldo FROM bancos WHERE idBancos = ('null');")) 
-				    {
-				    	//System.out.println(sql1);
+				    {				    	
 				    	try 
 				    	{
 				    		pstmt = conn.prepareStatement(sql1);
-			            	rs = pstmt.executeQuery();
+			            	rs = pstmt.executeQuery();			            	
 			            	double sdl = rs.getDouble("saldo");
 			            	if(sinal == "-") 
 							{
-								Transacao.saldo = (sdl - Transacao.valor);
+								Transacao.saldo = (sdl - Transacao.valor);								
 							} else 
 							{
-								Transacao.saldo = (sdl + Transacao.valor);
+								Transacao.saldo = (sdl + Transacao.valor);								
 							}
 					        
 				    	}
@@ -122,19 +121,7 @@ public class TelaTransacao extends JFrame {
 					    	Conexao.fecharConexao(conn, pstmt, rs);
 					    }
 				   }
-				}					  
-				/*
-				System.out.println("Transacao.tipo="+Transacao.tipo);
-			    System.out.println("Transacao.dataTransacao="+Transacao.dataTransacao);
-			    System.out.println("Transacao.descricao="+Transacao.descricao);
-				System.out.println("Transacao.valor="+Transacao.valor);
-				System.out.println("Transacao.FK_idDespesa="+Transacao.FK_idDespesa);
-				System.out.println("Transacao.FK_idReceita="+Transacao.FK_idReceita);
-				System.out.println("Transacao.FK_cnpj="+Transacao.FK_cnpj);
-				System.out.println("Transacao.FK_cpf="+Transacao.FK_cpf);
-				System.out.println("Transacao.FK_idBancos="+Transacao.FK_idBancos);
-				System.out.println("Transacao.saldo="+Transacao.saldo);
-				*/
+				}
 				TransacaoControle tc = new TransacaoControle();
 				tc.salvar();
 			    limparCampos();
@@ -164,13 +151,11 @@ public class TelaTransacao extends JFrame {
 		BoxContaBanco.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String contabanco = String.valueOf(BoxContaBanco.getSelectedItem());
-				//System.out.println("CONTA BANCO = "+contabanco);
+				BoxContaBanco.getSelectedIndex();
 				StringTokenizer contaB = new StringTokenizer(contabanco, " ");
 				String conta = contaB.nextToken();
-				//System.out.println(conta);
 				int qtd = conta.length();
 				String nomebanco = contabanco.substring(qtd+1);
-				//System.out.println(nomebanco);			
 				
 				// Seleciona o ID do banco escolhido pelo usuário
 				Connection conn = null;
@@ -185,8 +170,7 @@ public class TelaTransacao extends JFrame {
 			    		pstmt = conn.prepareStatement(sql1);
 		            	rs = pstmt.executeQuery();
 		            	Transacao.FK_idBancos = rs.getInt("idBancos");
-				        //System.out.println("Variavel Transacao.FK_idBancos = "+Transacao.FK_idBancos);
-				    	//Conexao.fecharConexao(conn, pstmt, rs);
+				        
 			    	}
 			    	 catch(SQLException ex)
 				    {
@@ -243,8 +227,7 @@ public class TelaTransacao extends JFrame {
 				
 				// RECEITA
 				
-				String transacao_rec_desp = String.valueOf(BoxReceitaDespesa.getSelectedItem());
-				//System.out.println("VARIAVEL transacao_rec_desp = "+transacao_rec_desp);
+				String transacao_rec_desp = String.valueOf(BoxReceitaDespesa.getSelectedItem());				
 				StringTokenizer recdesp = new StringTokenizer(transacao_rec_desp, " ");
 				String contarecdesp = recdesp.nextToken();				
 				int qtd = contarecdesp.length();
@@ -252,9 +235,6 @@ public class TelaTransacao extends JFrame {
 				{
 					nomerecdesp = transacao_rec_desp.substring(qtd+1);
 				}
-								
-				//System.out.println(contarecdesp);	
-				//System.out.println(nomerecdesp);
 				
 				if(!transacao_rec_desp.equals("") && !transacao_rec_desp.equals("null") && !transacao_rec_desp.equals(null))
 				{	
@@ -265,16 +245,13 @@ public class TelaTransacao extends JFrame {
 				    conn = Conexao.getConexao(); //conectar ao banco de dados
 				    String sql1 = "SELECT idReceita FROM receita WHERE contaReceita = ('"+contarecdesp+"') AND nomeReceita = ('"+nomerecdesp+"');";
 				    if(!sql1.equals("SELECT idReceita FROM receita WHERE contaReceita = ('null') AND nomeReceita = ('null');")) 
-				    {
-				    	//System.out.println(sql1);
+				    {				    	
 				    	try 
 				    	{
 				    		pstmt = conn.prepareStatement(sql1);
 			            	rs = pstmt.executeQuery();
 			            	Transacao.FK_idReceita = rs.getInt("idReceita");
-					        //System.out.println("Variavel Transacao.FK_idReceita = "+Transacao.FK_idReceita);
-					        //rs.close();
-					    	//Conexao.fecharConexao(conn, pstmt, rs);
+					       
 				    	}
 				    	 catch(SQLException ex)
 					    {
@@ -287,7 +264,7 @@ public class TelaTransacao extends JFrame {
 				   }
 				} 
 				
-				// DESPESA
+				// DESPESA	
 				
 				if(!transacao_rec_desp.equals("") && !transacao_rec_desp.equals("null") && !transacao_rec_desp.equals(null))
 				{	
@@ -296,18 +273,15 @@ public class TelaTransacao extends JFrame {
 				    PreparedStatement pstmt = null;
 				    ResultSet rs = null;
 				    conn = Conexao.getConexao(); //conectar ao banco de dados
-				    String sql1 = "SELECT idDespesa FROM despesa WHERE contaDespesa = ('"+contarecdesp+"') AND nomeDespesa = ('"+nomerecdesp+"');";
-				    if(!sql1.equals("SELECT idDespesa FROM despesa WHERE contaDespesa = ('null') AND nomeDespesa = ('null');")) 
-				    {
-				    	//System.out.println(sql1);
+				    String sql2 = "SELECT idDespesa FROM despesa WHERE contaDespesa = ('"+contarecdesp+"') AND nomeDespesa = ('"+nomerecdesp+"');";
+				    if(!sql2.equals("SELECT idDespesa FROM despesa WHERE contaDespesa = ('null') AND nomeDespesa = ('null');")) 
+				    {				    	
 				    	try 
 				    	{
-				    		pstmt = conn.prepareStatement(sql1);
+				    		pstmt = conn.prepareStatement(sql2);
 			            	rs = pstmt.executeQuery();
 			            	Transacao.FK_idDespesa = rs.getInt("idDespesa");
-					        //System.out.println("Variavel Transacao.FK_idDespesa = "+Transacao.FK_idDespesa);
-					        //rs.close();
-					    	//Conexao.fecharConexao(conn, pstmt, rs);
+					       
 				    	}
 				    	 catch(SQLException ex)
 					    {
@@ -338,7 +312,9 @@ public class TelaTransacao extends JFrame {
 				
 				if(BoxTipoRecDes.getSelectedItem() == "DESPESA")
 				{	
-					BoxReceitaDespesa.removeAllItems();				
+					BoxReceitaDespesa.removeAllItems();
+					Transacao.FK_idDespesa = 0;
+					Transacao.FK_idReceita = 0;					
 					//Selecionar o ultimo id das tabelas relacionadas para salvar a chave estrangeira na transacao
 					Connection conn = null;
 				    PreparedStatement pstmt = null;
@@ -372,6 +348,8 @@ public class TelaTransacao extends JFrame {
 				if(BoxTipoRecDes.getSelectedItem() == "RECEITA") 
 				{	
 					BoxReceitaDespesa.removeAllItems();
+					Transacao.FK_idDespesa = 0;
+					Transacao.FK_idReceita = 0;
 					//Selecionar o ultimo id das tabelas relacionadas para salvar a chave estrangeira na transacao
 					Connection conn = null;
 				    PreparedStatement pstmt = null;
@@ -505,6 +483,14 @@ public class TelaTransacao extends JFrame {
 		
 		
 		JButton btnConsulta = new JButton("CONSULTA");
+		btnConsulta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TelaTransacao tt = new TelaTransacao();
+                tt.dispose();
+                ConsultaTransacao tp = new ConsultaTransacao();
+                tp.setVisible(true);
+			}
+		});
 		btnConsulta.setForeground(Color.GRAY);
 		btnConsulta.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnConsulta.setBounds(457, 585, 125, 28);
@@ -516,8 +502,7 @@ public class TelaTransacao extends JFrame {
 
 				// PESSOA FISICA
 				
-				String transacao_pf_pj = String.valueOf(BoxFavorecido.getSelectedItem());
-				//System.out.println("variavel transacao_pf_pj = "+transacao_pf_pj);
+				String transacao_pf_pj = String.valueOf(BoxFavorecido.getSelectedItem());				
 				if(!transacao_pf_pj.equals("") && !transacao_pf_pj.equals("null") && !transacao_pf_pj.equals(null))
 				{	
 					// Seleciona o ID do favorecido escolhido pelo usuário
@@ -527,15 +512,12 @@ public class TelaTransacao extends JFrame {
 				    conn = Conexao.getConexao(); //conectar ao banco de dados
 				    String sql1 = "SELECT cpf FROM pessoaFisica WHERE nomePF = ('"+transacao_pf_pj+"');";
 				    if(!sql1.equals("SELECT cpf FROM pessoaFisica WHERE nomePF = ('null');")) 
-				    {
-				    	//System.out.println(sql1);
+				    {				    	
 				    	try 
 				    	{
 				    		pstmt = conn.prepareStatement(sql1);
 			            	rs = pstmt.executeQuery();
 			            	Transacao.FK_cpf = rs.getLong("cpf");
-					        //System.out.println("Variavel Transacao.FK_cpf = "+Transacao.FK_cpf);
-					        //rs.close();
 					    	Conexao.fecharConexao(conn, pstmt, rs);
 				    	}
 				    	 catch(SQLException ex)
@@ -559,15 +541,15 @@ public class TelaTransacao extends JFrame {
 				    ResultSet rss = null;							    
 				    connn = Conexao.getConexao(); //conectar ao banco de dados
 				    String sql2 = "SELECT cnpj FROM pessoaJuridica WHERE nomePJ = ('"+transacao_pf_pj+"');";
-				    if(!sql1.equals("SELECT cnpj FROM pessoaJuridica WHERE nomePJ = ('null');")) 
+				    if(!sql2.equals("SELECT cnpj FROM pessoaJuridica WHERE nomePJ = ('null');")) 
 				    {	
 				    	try
 					    {
 				    		pstmtt = connn.prepareStatement(sql2);
 			            	rss = pstmtt.executeQuery();
 			            	Transacao.FK_cnpj = rss.getLong("cnpj");
-					        //System.out.println("Variavel Transacao.FK_cnpj = "+Transacao.FK_cnpj);
-					    	Conexao.fecharConexao(connn, pstmtt, rss);					    }
+					    	Conexao.fecharConexao(connn, pstmtt, rss);					    
+					    }
 					    catch(SQLException ex)
 					    {
 
@@ -598,6 +580,8 @@ public class TelaTransacao extends JFrame {
 				if(BoxTipoFavorecido.getSelectedItem() == "PESSOA FÍSICA")
 				{	
 					BoxFavorecido.removeAllItems();
+					Transacao.FK_cnpj = 0;
+					Transacao.FK_cpf = 0;
 					//Selecionar o ultimo id das tabelas relacionadas para salvar a chave estrangeira na transacao
 					Connection conn = null;
 				    PreparedStatement pstmt = null;
@@ -642,6 +626,8 @@ public class TelaTransacao extends JFrame {
 				if(BoxTipoFavorecido.getSelectedItem() == "PESSOA JURÍDICA") 
 				{	
 					BoxFavorecido.removeAllItems();
+					Transacao.FK_cnpj = 0;
+					Transacao.FK_cpf = 0;
 					//Selecionar o ultimo id das tabelas relacionadas para salvar a chave estrangeira na transacao
 					Connection conn = null;
 				    PreparedStatement pstmt = null;
@@ -753,11 +739,11 @@ public class TelaTransacao extends JFrame {
 					Transacao.tipo = "RESGATE";
 					if(BoxTipoRecDes.getSelectedItem() == "RECEITA")
 					{
-						sinal = "-";						
+						sinal = "+";						
 					}
 					if(BoxTipoRecDes.getSelectedItem() == "DESPESA")
 					{
-						sinal = "+";
+						sinal = "-";
 					}
 				}				
 				if(BoxTipo.getSelectedItem() == "RENDIMENTO") 
@@ -770,8 +756,6 @@ public class TelaTransacao extends JFrame {
 					Transacao.tipo = "PREJUÍZO";
 					sinal = "-";
 				}
-				
-				//System.out.println("VARIAVEL Transacao.tipo = "+Transacao.tipo);
 				
 			}
 		});

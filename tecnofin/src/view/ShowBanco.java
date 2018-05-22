@@ -287,7 +287,7 @@ public class ShowBanco extends JFrame {
 		            pstmt = conn.prepareStatement(sql);		            
 		            rs = pstmt.executeQuery();
 		            
-		            Banco.cnpj = rs.getLong("cnpj");
+		            Banco.cnpj = rs.getLong("cnpjB");
 		            Banco.nome = rs.getString("nome");
 		            Banco.bancoNum = rs.getInt("numeroB");		            
 		            Banco.agencia = rs.getString("agencia");

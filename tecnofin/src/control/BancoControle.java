@@ -72,7 +72,7 @@ public class BancoControle {
 	        
 	        String sql2 = "SELECT * FROM cadastro WHERE idCadastro = (SELECT MAX(idCadastro) FROM cadastro);";
 	        
-	        String sql3 = "INSERT INTO bancos (cnpj, nome, numeroB, agencia, tipoConta, contaNum, gerente, saldo, FK_idCadastro) "
+	        String sql3 = "INSERT INTO bancos (cnpjB, nome, numeroB, agencia, tipoConta, contaNum, gerente, saldo, FK_idCadastro) "
 	        		+"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	        try
 	        {
@@ -119,7 +119,7 @@ public class BancoControle {
 	        String cidadeMaiusculo = Banco.cidade.toUpperCase();
 	        String bairroMaiusculo = Banco.bairro.toUpperCase();
 	        
-	        String sql1 = "UPDATE bancos SET cnpj = ?, nome = ?, numeroB = ?, agencia = ?, tipoConta = ?, contaNum = ?, gerente = ? WHERE idBancos = ?;";
+	        String sql1 = "UPDATE bancos SET cnpjB = ?, nome = ?, numeroB = ?, agencia = ?, tipoConta = ?, contaNum = ?, gerente = ? WHERE idBancos = ?;";
 	        
 	        try
 	        {   

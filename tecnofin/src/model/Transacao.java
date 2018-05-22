@@ -15,6 +15,13 @@ public class Transacao {
 	public static long FK_cnpj;
 	public static long FK_cpf;
 	public static int FK_idBancos;
+	
+	
+	public static int tipot;
+	public static String boxbanco;
+	
+	public static String contabanco;
+	
 
 
 }
