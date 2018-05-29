@@ -3,6 +3,8 @@ package view;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -88,8 +90,8 @@ public class TelaLogin extends JFrame {
 				Login.email = txtEmail.getText();
 				Login.senha = new String(txtSenha.getPassword());
 				LoginConexao vg = new LoginConexao();
-			    vg.verificarLogin();  //é o método de verificar o usuário
-			    
+			    vg.verificarLogin();  //é o método de verificar o usuário	
+				
 			}
 		});
 		btnEntrar.setBounds(259, 279, 150, 30);

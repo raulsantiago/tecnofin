@@ -36,7 +36,7 @@ import model.Despesa;
 	        }
 	        catch(SQLException ex)
 	        {
-	        	JOptionPane.showMessageDialog(null, "Erro ao salvar no banco de dados. Erro: " + ex);
+	        	JOptionPane.showMessageDialog(null, "Código da conta contábil já utilizado ! Erro: " + ex);
 	        }
 	        finally
 	        {

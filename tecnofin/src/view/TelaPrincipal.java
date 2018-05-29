@@ -91,7 +91,7 @@ public class TelaPrincipal extends JFrame {
 		btnAcesso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				if(Login.admin == 0) 
+				if(Login.user_current == 0) 
 				{
 					JOptionPane.showMessageDialog(null, "Usuário não tem permissão para acesso ! Favor contactar um adminitrador do sistema.");
 				} else 
@@ -113,7 +113,7 @@ public class TelaPrincipal extends JFrame {
 		JButton btnGerencial = new JButton("GERENCIAL");
 		btnGerencial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(Login.admin == 0) 
+				if(Login.user_current == 0) 
 				{
 					JOptionPane.showMessageDialog(null, "Usuário não tem permissão para acesso ! Favor contactar um adminitrador do sistema.");
 				} else 

@@ -92,7 +92,7 @@ public class FisicaControle {
 	        }
 	        catch(SQLException ex)
 	        {
-	        	JOptionPane.showMessageDialog(null, "Erro ao salvar no banco de dados. Erro: " + ex);
+	        	JOptionPane.showMessageDialog(null, "CPF já utilizado ! Erro: " + ex);
 	        }
 	        finally
 	        {

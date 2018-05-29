@@ -157,7 +157,7 @@ public class ShowBanco extends JFrame {
 		                + textNome.getText() 
 		                + "%') AND agencia LIKE ('%"
 		                + textAgencia.getText()
-		                + "%') AND numeroB LIKE ('%"
+		                + "%') AND contaNum LIKE ('%"
 		                + textNumero.getText()
 		                + "%') AND tipoConta LIKE ('%"
 		                + textTipoConta.getText()

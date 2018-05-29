@@ -24,36 +24,31 @@ public class LoginConexao {
     {
          
         Connection conn = null;
-        String sql = "SELECT * FROM login WHERE email in ('" + Login.email + "');";
-        conn = Conexao.getConexao(); //conectar ao banco de dados
         PreparedStatement stmt = null;
         ResultSet rs = null;
-               
+        String sql = "SELECT * FROM login WHERE email in ('" + Login.email + "');";
+        conn = Conexao.getConexao(); //conectar ao banco de dados       
         try
         {
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
-            if(rs.next())
-            {
             String usuario = rs.getString("email");
             String password = rs.getString("senha");
-            Login.admin = rs.getInt("admin");
-                if(usuario.equals(Login.email) && password.equals(Login.senha))
-                {
-                    TelaPrincipal tp = new TelaPrincipal();
-                    tp.setVisible(true);
-                    TelaLogin tl = new TelaLogin();                    
-                    tl.dispose();
-                 }
-            } else
+            Login.user_current = rs.getInt("admin");            
+            if(usuario.equals(Login.email) && password.equals(Login.senha))
             {
-            	JOptionPane.showMessageDialog(null, "Digitou o email e/ou a senha errado !");
-                Conexao.fecharConexao(conn);               
-            }
+                TelaPrincipal tp = new TelaPrincipal();
+                tp.setVisible(true);
+                TelaLogin tl = new TelaLogin();                    
+                tl.dispose();
+            }else
+			{
+				JOptionPane.showMessageDialog(null, "Senha não confere !");
+			}
         }
         catch(SQLException ex)
         {
-            JOptionPane.showMessageDialog(null, "Erro ao entrar no banco de dados. Erro: " + ex);
+            JOptionPane.showMessageDialog(null, "E-mail e/ou senha não confere! ou não possui cadastro!");
         }
         finally
         {
@@ -85,7 +80,7 @@ public class LoginConexao {
 	        }
 	        catch(SQLException ex)
 	        {
-	        	JOptionPane.showMessageDialog(null, "Erro ao salvar no banco de dados. Erro: " + ex);
+	        	JOptionPane.showMessageDialog(null, "Não é permitido utilizar este e-mail, pois já existe em nosso cadastro! Erro: " + ex);
 	        }
 	        finally
 	        {
